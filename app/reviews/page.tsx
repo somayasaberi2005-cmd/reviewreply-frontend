@@ -31,12 +31,21 @@ function initials(name: string) {
   return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
 }
 
+const filterOptions: { label: string; value: "all" | ReplyStatus }[] = [
+  { label: "All", value: "all" },
+  { label: "Pending", value: "pending" },
+  { label: "Posted", value: "posted" },
+  { label: "Rejected", value: "rejected" },
+];
+
 export default function ReviewsPage() {
   const { selectedBusinessId } = useBusinessContext();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draftText, setDraftText] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"all" | ReplyStatus>("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (!selectedBusinessId) return;
@@ -73,6 +82,16 @@ export default function ReviewsPage() {
     setEditingId(null);
   }
 
+  const filteredReviews = reviews.filter((review) => {
+    const matchesStatus = statusFilter === "all" || review.replyStatus === statusFilter;
+    const query = searchQuery.toLowerCase();
+    const matchesSearch =
+      query === "" ||
+      review.reviewer.displayName.toLowerCase().includes(query) ||
+      review.reviewText.toLowerCase().includes(query);
+    return matchesStatus && matchesSearch;
+  });
+
   if (loading) {
     return <p className="text-slate-500 text-sm">Loading reviews...</p>;
   }
@@ -84,14 +103,39 @@ export default function ReviewsPage() {
         <p className="page-subtitle">{reviews.length} reviews across your businesses</p>
       </div>
 
-      {reviews.length === 0 ? (
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
+        <div className="flex gap-2">
+          {filterOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setStatusFilter(option.value)}
+              className={`text-xs font-medium px-3 py-1.5 rounded-full transition-colors ${
+                statusFilter === option.value
+                  ? "bg-berry-600 text-white"
+                  : "bg-white border border-border text-slate-600 hover:bg-slate-50"
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <input
+          type="text"
+          placeholder="Search by reviewer or review text..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="text-sm border border-border rounded-md px-3 py-1.5 flex-1 sm:max-w-xs"
+        />
+      </div>
+
+      {filteredReviews.length === 0 ? (
         <div className="empty-state">
-          <p className="font-medium text-slate-700">No reviews yet</p>
-          <p className="empty-state-text">Reviews will appear here once your Google Business Profile is connected.</p>
+          <p className="font-medium text-slate-700">No reviews match your filters</p>
+          <p className="empty-state-text">Try a different status or search term.</p>
         </div>
       ) : (
         <div className="space-y-4">
-          {reviews.map((review) => (
+          {filteredReviews.map((review) => (
             <div key={review.id} className="card">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
