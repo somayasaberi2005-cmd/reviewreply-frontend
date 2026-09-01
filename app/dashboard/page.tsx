@@ -1,16 +1,19 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { getDashboardStats } from "@/lib/api";
 import { DashboardStats } from "@/lib/types";
+import { useBusinessContext } from "@/lib/business-context";
 import { MessageSquareText, Clock, Star, TrendingUp } from "lucide-react";
 
 export default function DashboardPage() {
+  const { selectedBusinessId } = useBusinessContext();
   const [stats, setStats] = useState<DashboardStats | null>(null);
 
   useEffect(() => {
-    getDashboardStats().then(setStats);
-  }, []);
+    if (!selectedBusinessId) return;
+    getDashboardStats(selectedBusinessId).then(setStats);
+  }, [selectedBusinessId]);
 
   if (!stats) {
     return <p className="text-slate-500 text-sm">Loading dashboard...</p>;

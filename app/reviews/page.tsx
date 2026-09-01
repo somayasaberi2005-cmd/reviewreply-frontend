@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { getReviews } from "@/lib/api";
+import { useBusinessContext } from "@/lib/business-context";
 import { Review, ReplyStatus } from "@/lib/types";
 
 function StatusBadge({ status }: { status: string }) {
@@ -31,17 +32,20 @@ function initials(name: string) {
 }
 
 export default function ReviewsPage() {
+  const { selectedBusinessId } = useBusinessContext();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draftText, setDraftText] = useState("");
 
   useEffect(() => {
-    getReviews().then((data) => {
+    if (!selectedBusinessId) return;
+    setLoading(true);
+    getReviews(selectedBusinessId).then((data) => {
       setReviews(data);
       setLoading(false);
     });
-  }, []);
+  }, [selectedBusinessId]);
 
   function updateReplyStatus(reviewId: string, newStatus: ReplyStatus) {
     setReviews((prev) =>

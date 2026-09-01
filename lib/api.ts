@@ -7,6 +7,7 @@ function delay(ms: number) {
 const mockReviews: Review[] = [
   {
     id: "1",
+    businessId: "b1",
     businessReviewSiteId: "brs-1",
     reviewer: { id: "r1", displayName: "Sarah Chen" },
     rating: 5,
@@ -25,6 +26,7 @@ const mockReviews: Review[] = [
   },
   {
     id: "2",
+    businessId: "b1",
     businessReviewSiteId: "brs-1",
     reviewer: { id: "r2", displayName: "James Okoro" },
     rating: 2,
@@ -43,13 +45,14 @@ const mockReviews: Review[] = [
   },
   {
     id: "3",
-    businessReviewSiteId: "brs-1",
+    businessId: "b2",
+    businessReviewSiteId: "brs-2",
     reviewer: { id: "r3", displayName: "Priya Patel" },
     rating: 4,
     reviewText: "Good food, a bit pricey.",
     reviewCreatedAt: "2026-08-27",
     replyStatus: "pending",
-    businessName: "Downtown Cafe",
+    businessName: "Riverside Diner",
   },
 ];
 
@@ -58,17 +61,27 @@ const mockBusinesses: Business[] = [
   { id: "b2", name: "Riverside Diner", shortName: "Riverside", city: "Austin", state: "TX", status: "active" },
 ];
 
-export async function getReviews(): Promise<Review[]> {
+export async function getReviews(businessId?: string): Promise<Review[]> {
   await delay(300);
-  return mockReviews;
+  if (!businessId) return mockReviews;
+  return mockReviews.filter((r) => r.businessId === businessId);
 }
 
-export async function getDashboardStats(): Promise<DashboardStats> {
+export async function getDashboardStats(businessId?: string): Promise<DashboardStats> {
   await delay(300);
+  const relevant = businessId
+    ? mockReviews.filter((r) => r.businessId === businessId)
+    : mockReviews;
+
+  const avgRating =
+    relevant.length > 0
+      ? relevant.reduce((sum, r) => sum + r.rating, 0) / relevant.length
+      : 0;
+
   return {
-    totalReviews: mockReviews.length,
-    averageRating: 4.6,
-    pendingReplies: mockReviews.filter((r) => r.replyStatus === "pending").length,
+    totalReviews: relevant.length,
+    averageRating: Math.round(avgRating * 10) / 10,
+    pendingReplies: relevant.filter((r) => r.replyStatus === "pending").length,
     responseRate: 94,
   };
 }
@@ -77,6 +90,7 @@ export async function getBusinesses(): Promise<Business[]> {
   await delay(300);
   return mockBusinesses;
 }
+
 export async function getReportSummary(): Promise<ReportSummary> {
   await delay(300);
   return {

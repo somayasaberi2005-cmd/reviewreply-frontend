@@ -26,6 +26,7 @@ export type ReviewReply = {
 
 export type Review = {
   id: string;
+  businessId: string;
   businessReviewSiteId: string;
   reviewer: Reviewer;
   rating: number; // 1-5
