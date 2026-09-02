@@ -1,4 +1,4 @@
-import { Review, DashboardStats, Business, ReportSummary } from "./types";
+import { Review, DashboardStats, Business, ReportSummary, ReplyStatus } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -9,7 +9,7 @@ const mockReviews: Review[] = [
     id: "1",
     businessId: "b1",
     businessReviewSiteId: "brs-1",
-    reviewer: { id: "r1", displayName: "Sarah Chen" },
+    reviewer: { id: "r1", displayName: "Sadaf Ahmadi" },
     rating: 5,
     reviewText: "Fantastic service, will come back again!",
     reviewCreatedAt: "2026-08-20",
@@ -17,18 +17,18 @@ const mockReviews: Review[] = [
     reply: {
       id: "rep-1",
       reviewId: "1",
-      body: "Thank you so much, Sarah! We're thrilled you had a great experience and can't wait to see you again.",
+      body: "Thank you so much, Sadaf! We're thrilled you had a great experience and can't wait to see you again.",
       status: "posted",
       source: "ai",
       publishedAt: "2026-08-20T14:30:00Z",
     },
-    businessName: "Downtown Cafe",
+    businessName: "Roshan",
   },
   {
     id: "2",
     businessId: "b1",
     businessReviewSiteId: "brs-1",
-    reviewer: { id: "r2", displayName: "James Okoro" },
+    reviewer: { id: "r2", displayName: "Ali Rahimi" },
     rating: 2,
     reviewText: "Waited 40 minutes for my order.",
     reviewCreatedAt: "2026-08-25",
@@ -36,23 +36,23 @@ const mockReviews: Review[] = [
     reply: {
       id: "rep-2",
       reviewId: "2",
-      body: "Hi James, we're very sorry about the wait â€” that's not the experience we aim for. We'd love the chance to make it right.",
+      body: "Hi Ali, we're very sorry about the wait — that's not the experience we aim for. We'd love the chance to make it right.",
       status: "pending",
       source: "ai",
       publishedAt: null,
     },
-    businessName: "Downtown Cafe",
+    businessName: "Roshan",
   },
   {
     id: "3",
     businessId: "b2",
     businessReviewSiteId: "brs-2",
-    reviewer: { id: "r3", displayName: "Priya Patel" },
+    reviewer: { id: "r3", displayName: "Mahdi Karimi" },
     rating: 4,
-    reviewText: "Good food, a bit pricey.",
+    reviewText: "Good service, a bit slow at times.",
     reviewCreatedAt: "2026-08-27",
     replyStatus: "pending",
-    businessName: "Riverside Diner",
+    businessName: "Azizi Bank",
   },
 ];
 
@@ -68,6 +68,27 @@ export async function getReviews(businessId?: string): Promise<Review[]> {
   await delay(300);
   if (!businessId) return mockReviews;
   return mockReviews.filter((r) => r.businessId === businessId);
+}
+
+export async function updateReviewReplyStatus(reviewId: string, newStatus: ReplyStatus): Promise<Review> {
+  await delay(200);
+  const review = mockReviews.find((r) => r.id === reviewId);
+  if (!review) throw new Error("Review not found");
+  review.replyStatus = newStatus;
+  if (review.reply) {
+    review.reply.status = newStatus;
+  }
+  return review;
+}
+
+export async function updateReviewReplyBody(reviewId: string, body: string): Promise<Review> {
+  await delay(200);
+  const review = mockReviews.find((r) => r.id === reviewId);
+  if (!review) throw new Error("Review not found");
+  if (review.reply) {
+    review.reply.body = body;
+  }
+  return review;
 }
 
 export async function getDashboardStats(businessId?: string): Promise<DashboardStats> {
@@ -109,4 +130,24 @@ export async function getReportSummary(): Promise<ReportSummary> {
     avgResponseTimeHours: 3.2,
     sentiment: { positive: 62, neutral: 21, negative: 17 },
   };
+}
+export async function getNegativeReviewAlerts(businessId?: string): Promise<Review[]> {
+  await delay(200);
+  const relevant = businessId
+    ? mockReviews.filter((r) => r.businessId === businessId)
+    : mockReviews;
+  return relevant.filter((r) => r.rating <= 2 && r.replyStatus === "pending");
+}
+
+export async function bulkUpdateReviewReplyStatus(reviewIds: string[], newStatus: ReplyStatus): Promise<void> {
+  await delay(300);
+  reviewIds.forEach((id) => {
+    const review = mockReviews.find((r) => r.id === id);
+    if (review) {
+      review.replyStatus = newStatus;
+      if (review.reply) {
+        review.reply.status = newStatus;
+      }
+    }
+  });
 }
