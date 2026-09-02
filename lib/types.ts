@@ -7,6 +7,7 @@ export type Business = {
   city: string;
   state: string;
   status: string;
+  googleConnected: boolean;
 };
 
 export type Reviewer = {

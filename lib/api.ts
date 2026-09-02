@@ -36,7 +36,7 @@ const mockReviews: Review[] = [
     reply: {
       id: "rep-2",
       reviewId: "2",
-      body: "Hi James, we're very sorry about the wait — that's not the experience we aim for. We'd love the chance to make it right.",
+      body: "Hi James, we're very sorry about the wait â€” that's not the experience we aim for. We'd love the chance to make it right.",
       status: "pending",
       source: "ai",
       publishedAt: null,
@@ -57,8 +57,11 @@ const mockReviews: Review[] = [
 ];
 
 const mockBusinesses: Business[] = [
-  { id: "b1", name: "Downtown Cafe", shortName: "Downtown", city: "Austin", state: "TX", status: "active" },
-  { id: "b2", name: "Riverside Diner", shortName: "Riverside", city: "Austin", state: "TX", status: "active" },
+  { id: "b1", name: "Roshan", shortName: "Roshan", city: "Kabul", state: "Kabul", status: "active", googleConnected: true },
+  { id: "b2", name: "Azizi Bank", shortName: "Azizi Bank", city: "Kabul", state: "Kabul", status: "active", googleConnected: false },
+  { id: "b3", name: "Etisalat Afghanistan", shortName: "Etisalat", city: "Herat", state: "Herat", status: "active", googleConnected: false },
+  { id: "b4", name: "Afghan Wireless (AWCC)", shortName: "AWCC", city: "Mazar-i-Sharif", state: "Balkh", status: "active", googleConnected: false },
+  { id: "b5", name: "Kabul Bank", shortName: "Kabul Bank", city: "Kandahar", state: "Kandahar", status: "active", googleConnected: false },
 ];
 
 export async function getReviews(businessId?: string): Promise<Review[]> {
@@ -89,6 +92,14 @@ export async function getDashboardStats(businessId?: string): Promise<DashboardS
 export async function getBusinesses(): Promise<Business[]> {
   await delay(300);
   return mockBusinesses;
+}
+
+export async function connectGoogleBusinessProfile(businessId: string): Promise<Business> {
+  await delay(1200);
+  const business = mockBusinesses.find((b) => b.id === businessId);
+  if (!business) throw new Error("Business not found");
+  business.googleConnected = true;
+  return business;
 }
 
 export async function getReportSummary(): Promise<ReportSummary> {
