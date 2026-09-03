@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Sidebar } from "@/components/layout/Sidebar";
 import { BusinessProvider } from "@/lib/business-context";
 import { UserProvider } from "@/lib/user-context";
-import { TopbarSearch } from "@/components/layout/TopbarSearch";
-import { NotificationBell } from "@/components/layout/NotificationBell";
-import { UserMenu } from "@/components/layout/UserMenu";
+import { ToastProvider } from "@/lib/toast-context";
+import { AppShell } from "@/components/layout/AppShell";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,22 +27,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex bg-slate-50">
-        <UserProvider>
-        <BusinessProvider>
-          <Sidebar />
-          <div className="flex-1 flex flex-col">
-            <header className="h-14 border-b border-border bg-white flex items-center justify-between px-6">
-              <TopbarSearch />
-              <div className="flex items-center gap-4">
-                <NotificationBell />
-                <UserMenu />
-              </div>
-            </header>
-            <main className="flex-1 p-8">{children}</main>
-          </div>
-        </BusinessProvider>
+      <body className="min-h-full">
+        <ToastProvider>
+          <UserProvider>
+          <BusinessProvider>
+            <AppShell>{children}</AppShell>
+          </BusinessProvider>
         </UserProvider>
+        </ToastProvider>
       </body>
     </html>
   );

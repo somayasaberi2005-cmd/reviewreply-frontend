@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { getReviews, updateReviewReplyStatus, updateReviewReplyBody, bulkUpdateReviewReplyStatus } from "@/lib/api";
 import { useBusinessContext } from "@/lib/business-context";
 import { useUserContext } from "@/lib/user-context";
+import { useToast } from "@/lib/toast-context";
 import { Review, ReplyStatus } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle } from "lucide-react";
@@ -46,6 +47,7 @@ export default function ReviewsPage() {
   const { selectedBusinessId } = useBusinessContext();
   const { user } = useUserContext();
   const canEdit = user.role !== "viewer";
+  const { showToast } = useToast();
   const searchParams = useSearchParams();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
@@ -88,6 +90,7 @@ export default function ReviewsPage() {
       )
     );
     updateReviewReplyStatus(reviewId, newStatus);
+    showToast(newStatus === "posted" ? "Reply approved" : "Reply rejected");
   }
 
   function startEditing(review: Review) {
@@ -105,6 +108,7 @@ export default function ReviewsPage() {
     );
     updateReviewReplyBody(reviewId, draftText);
     setEditingId(null);
+    showToast("Reply updated");
   }
 
   function toggleSelect(reviewId: string) {
@@ -125,6 +129,7 @@ export default function ReviewsPage() {
     );
     setSelectedIds([]);
     setBulkLoading(false);
+    showToast(newStatus === "posted" ? `${selectedIds.length} replies approved` : `${selectedIds.length} replies rejected`);
   }
 
   const filteredReviews = reviews.filter((review) => {
@@ -208,7 +213,7 @@ export default function ReviewsPage() {
           </div>
 
           {selectablePending.length > 0 && canEdit && (
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex flex-wrap items-center gap-3 mb-4">
               <label className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
                 <input
                   type="checkbox"
@@ -220,7 +225,7 @@ export default function ReviewsPage() {
               </label>
 
               {selectedIds.length > 0 && (
-                <div className="flex items-center gap-2 ml-auto bg-berry-50 border border-berry-200 rounded-lg px-3 py-1.5">
+                <div className="flex flex-wrap items-center gap-2 sm:ml-auto bg-berry-50 border border-berry-200 rounded-lg px-3 py-1.5">
                   <span className="text-xs font-medium text-berry-800">{selectedIds.length} selected</span>
                   <button
                     onClick={() => handleBulkAction("posted")}
@@ -296,7 +301,7 @@ export default function ReviewsPage() {
                         <div>
                           <p className="text-sm text-slate-600 mb-2">{review.reply.body}</p>
                           {review.replyStatus === "pending" && canEdit && (
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-2">
                               <button onClick={() => updateReplyStatus(review.id, "posted")} className="text-xs font-medium px-3 py-1.5 rounded-md bg-berry-600 text-white hover:bg-berry-800">
                                 Approve
                               </button>

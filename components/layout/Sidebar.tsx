@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   MessageSquareText,
@@ -12,6 +12,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useBusinessContext } from "@/lib/business-context";
+import { getPendingCountsByBusiness } from "@/lib/api";
 
 const navGroups = [
   {
@@ -35,12 +36,18 @@ function initials(name: string) {
   return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
 }
 
-export function Sidebar() {
+export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
   const { businesses, selectedBusinessId, setSelectedBusinessId, loading } = useBusinessContext();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [pendingCounts, setPendingCounts] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    getPendingCountsByBusiness().then(setPendingCounts);
+  }, []);
 
   const selectedBusiness = businesses.find((b) => b.id === selectedBusinessId);
+  const selectedPending = selectedBusiness ? pendingCounts[selectedBusiness.id] ?? 0 : 0;
 
   return (
     <aside className="w-64 h-full border-r border-border bg-white flex flex-col">
@@ -61,6 +68,7 @@ export function Sidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={onNavigate}
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors border-l-2 ${
                       isActive
                         ? "bg-berry-50 text-berry-800 border-berry-600"
@@ -100,29 +108,42 @@ export function Sidebar() {
                   {businesses.length} location{businesses.length !== 1 ? "s" : ""}
                 </p>
               </div>
+              {selectedPending > 0 && (
+                <span className="text-[10px] font-semibold bg-amber-100 text-amber-700 rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">
+                  {selectedPending}
+                </span>
+              )}
               <ChevronDown size={16} className="text-slate-400 flex-shrink-0" />
             </button>
 
             {dropdownOpen && (
               <div className="absolute bottom-full left-3 right-3 mb-1 bg-white border border-border rounded-lg shadow-sm py-1 max-h-56 overflow-y-auto">
-                {businesses.map((business) => (
-                  <button
-                    key={business.id}
-                    onClick={() => {
-                      setSelectedBusinessId(business.id);
-                      setDropdownOpen(false);
-                    }}
-                    className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-slate-50 transition-colors ${
-                      business.id === selectedBusinessId ? "bg-berry-50" : ""
-                    }`}
-                  >
-                    <div className="avatar-circle">{initials(business.name)}</div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-slate-900 truncate">{business.name}</p>
-                      <p className="text-xs text-slate-500 truncate">{business.city}, {business.state}</p>
-                    </div>
-                  </button>
-                ))}
+                {businesses.map((business) => {
+                  const count = pendingCounts[business.id] ?? 0;
+                  return (
+                    <button
+                      key={business.id}
+                      onClick={() => {
+                        setSelectedBusinessId(business.id);
+                        setDropdownOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-3 py-2 text-left hover:bg-slate-50 transition-colors ${
+                        business.id === selectedBusinessId ? "bg-berry-50" : ""
+                      }`}
+                    >
+                      <div className="avatar-circle">{initials(business.name)}</div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium text-slate-900 truncate">{business.name}</p>
+                        <p className="text-xs text-slate-500 truncate">{business.city}, {business.state}</p>
+                      </div>
+                      {count > 0 && (
+                        <span className="text-[10px] font-semibold bg-amber-100 text-amber-700 rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">
+                          {count}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </>

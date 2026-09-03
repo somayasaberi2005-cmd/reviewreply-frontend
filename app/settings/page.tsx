@@ -2,11 +2,17 @@
 
 import { useState } from "react";
 import { useBusinessContext } from "@/lib/business-context";
+import { useUserContext } from "@/lib/user-context";
 import { connectGoogleBusinessProfile } from "@/lib/api";
-import { CheckCircle2, ExternalLink } from "lucide-react";
+import { CheckCircle2, ExternalLink, Lock } from "lucide-react";
+import { useToast } from "@/lib/toast-context";
 
 export default function SettingsPage() {
   const { businesses, selectedBusinessId, loading } = useBusinessContext();
+  const { user } = useUserContext();
+  const { showToast } = useToast();
+  const canEditSettings = user.role === "owner" || user.role === "regional_manager";
+
   const [autoReply, setAutoReply] = useState(true);
   const [notifyNegative, setNotifyNegative] = useState(true);
   const [connecting, setConnecting] = useState(false);
@@ -16,11 +22,12 @@ export default function SettingsPage() {
   const isConnected = connectedOverride === selectedBusinessId || selectedBusiness?.googleConnected;
 
   async function handleConnect() {
-    if (!selectedBusinessId) return;
+    if (!selectedBusinessId || !canEditSettings) return;
     setConnecting(true);
     await connectGoogleBusinessProfile(selectedBusinessId);
     setConnectedOverride(selectedBusinessId);
     setConnecting(false);
+    showToast("Google Business Profile connected");
   }
 
   if (loading) {
@@ -34,6 +41,13 @@ export default function SettingsPage() {
         <p className="page-subtitle">Manage how ReviewReply works for your business</p>
       </div>
 
+      {!canEditSettings && (
+        <div className="flex items-center gap-2 text-sm text-slate-600 bg-slate-100 rounded-lg px-3 py-2 mb-4">
+          <Lock size={14} />
+          You have read-only access to settings. Contact an owner or regional manager to make changes.
+        </div>
+      )}
+
       <div className="card mb-4">
         <p className="font-medium text-slate-900 mb-1">Google Business Profile</p>
         <p className="text-sm text-slate-500 mb-4">
@@ -45,7 +59,7 @@ export default function SettingsPage() {
             <CheckCircle2 size={16} />
             Connected to Google Business Profile
           </div>
-        ) : (
+        ) : canEditSettings ? (
           <button
             onClick={handleConnect}
             disabled={connecting}
@@ -60,6 +74,8 @@ export default function SettingsPage() {
               </>
             )}
           </button>
+        ) : (
+          <p className="text-sm text-slate-500">Not connected</p>
         )}
       </div>
 
@@ -72,15 +88,17 @@ export default function SettingsPage() {
             <input
               type="text"
               defaultValue={selectedBusiness?.name ?? ""}
-              className="w-full text-sm border border-border rounded-md px-3 py-2"
+              disabled={!canEditSettings}
+              className="w-full text-sm border border-border rounded-md px-3 py-2 disabled:bg-slate-50 disabled:text-slate-400"
             />
           </div>
           <div>
             <label className="text-xs font-medium text-slate-500 block mb-1">Reply-to email</label>
             <input
               type="email"
-              defaultValue="hello@downtowncafe.com"
-              className="w-full text-sm border border-border rounded-md px-3 py-2"
+              defaultValue="hello@roshan.af"
+              disabled={!canEditSettings}
+              className="w-full text-sm border border-border rounded-md px-3 py-2 disabled:bg-slate-50 disabled:text-slate-400"
             />
           </div>
         </div>
@@ -96,8 +114,9 @@ export default function SettingsPage() {
             <p className="text-xs text-slate-500">Positive reviews get replied to automatically</p>
           </div>
           <button
-            onClick={() => setAutoReply(!autoReply)}
-            className={`w-10 h-6 rounded-full transition-colors relative ${autoReply ? "bg-berry-600" : "bg-slate-200"}`}
+            onClick={() => canEditSettings && setAutoReply(!autoReply)}
+            disabled={!canEditSettings}
+            className={`w-10 h-6 rounded-full transition-colors relative disabled:opacity-50 disabled:cursor-not-allowed ${autoReply ? "bg-berry-600" : "bg-slate-200"}`}
           >
             <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${autoReply ? "translate-x-4" : "translate-x-0.5"}`} />
           </button>
@@ -109,17 +128,20 @@ export default function SettingsPage() {
             <p className="text-xs text-slate-500">Get an alert for 1 and 2-star reviews</p>
           </div>
           <button
-            onClick={() => setNotifyNegative(!notifyNegative)}
-            className={`w-10 h-6 rounded-full transition-colors relative ${notifyNegative ? "bg-berry-600" : "bg-slate-200"}`}
+            onClick={() => canEditSettings && setNotifyNegative(!notifyNegative)}
+            disabled={!canEditSettings}
+            className={`w-10 h-6 rounded-full transition-colors relative disabled:opacity-50 disabled:cursor-not-allowed ${notifyNegative ? "bg-berry-600" : "bg-slate-200"}`}
           >
             <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${notifyNegative ? "translate-x-4" : "translate-x-0.5"}`} />
           </button>
         </div>
       </div>
 
-      <button className="text-sm font-medium px-4 py-2 rounded-md bg-berry-600 text-white hover:bg-berry-800">
-        Save changes
-      </button>
+      {canEditSettings && (
+        <button className="text-sm font-medium px-4 py-2 rounded-md bg-berry-600 text-white hover:bg-berry-800">
+          Save changes
+        </button>
+      )}
     </div>
   );
 }

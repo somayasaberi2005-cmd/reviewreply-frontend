@@ -36,7 +36,7 @@ const mockReviews: Review[] = [
     reply: {
       id: "rep-2",
       reviewId: "2",
-      body: "Hi Ali, we're very sorry about the wait — that's not the experience we aim for. We'd love the chance to make it right.",
+      body: "Hi Ali, we're very sorry about the wait ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â that's not the experience we aim for. We'd love the chance to make it right.",
       status: "pending",
       source: "ai",
       publishedAt: null,
@@ -91,11 +91,12 @@ export async function updateReviewReplyBody(reviewId: string, body: string): Pro
   return review;
 }
 
-export async function getDashboardStats(businessId?: string): Promise<DashboardStats> {
+export async function getDashboardStats(businessId?: string, range: DateRange = "all"): Promise<DashboardStats> {
   await delay(300);
-  const relevant = businessId
+  let relevant = businessId
     ? mockReviews.filter((r) => r.businessId === businessId)
     : mockReviews;
+  relevant = filterByDateRange(relevant, range);
 
   const avgRating =
     relevant.length > 0
@@ -106,7 +107,9 @@ export async function getDashboardStats(businessId?: string): Promise<DashboardS
     totalReviews: relevant.length,
     averageRating: Math.round(avgRating * 10) / 10,
     pendingReplies: relevant.filter((r) => r.replyStatus === "pending").length,
-    responseRate: 94,
+    responseRate: relevant.length > 0
+      ? Math.round((relevant.filter((r) => r.replyStatus !== "pending").length / relevant.length) * 100)
+      : 0,
   };
 }
 
@@ -123,12 +126,30 @@ export async function connectGoogleBusinessProfile(businessId: string): Promise<
   return business;
 }
 
-export async function getReportSummary(): Promise<ReportSummary> {
+export async function getReportSummary(businessId?: string, range: DateRange = "all"): Promise<ReportSummary> {
   await delay(300);
+  let relevant = businessId
+    ? mockReviews.filter((r) => r.businessId === businessId)
+    : mockReviews;
+  relevant = filterByDateRange(relevant, range);
+
+  const replyRate = relevant.length > 0
+    ? Math.round((relevant.filter((r) => r.replyStatus !== "pending").length / relevant.length) * 100)
+    : 0;
+
+  const positive = relevant.filter((r) => r.rating >= 4).length;
+  const neutral = relevant.filter((r) => r.rating === 3).length;
+  const negative = relevant.filter((r) => r.rating <= 2).length;
+  const total = relevant.length || 1;
+
   return {
-    replyRate: 94,
+    replyRate,
     avgResponseTimeHours: 3.2,
-    sentiment: { positive: 62, neutral: 21, negative: 17 },
+    sentiment: {
+      positive: Math.round((positive / total) * 100),
+      neutral: Math.round((neutral / total) * 100),
+      negative: Math.round((negative / total) * 100),
+    },
   };
 }
 export async function getNegativeReviewAlerts(businessId?: string): Promise<Review[]> {
@@ -150,4 +171,41 @@ export async function bulkUpdateReviewReplyStatus(reviewIds: string[], newStatus
       }
     }
   });
+}
+
+export type DateRange = "7d" | "30d" | "all";
+
+function filterByDateRange(reviews: Review[], range: DateRange): Review[] {
+  if (range === "all") return reviews;
+  const days = range === "7d" ? 7 : 30;
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - days);
+  return reviews.filter((r) => new Date(r.reviewCreatedAt) >= cutoff);
+}
+
+export async function getPendingCountsByBusiness(): Promise<Record<string, number>> {
+  await delay(200);
+  const counts: Record<string, number> = {};
+  mockReviews.forEach((r) => {
+    if (r.replyStatus === "pending") {
+      counts[r.businessId] = (counts[r.businessId] ?? 0) + 1;
+    }
+  });
+  return counts;
+}
+
+export async function getRatingDistribution(businessId?: string, range: DateRange = "all"): Promise<number[]> {
+  await delay(200);
+  let relevant = businessId
+    ? mockReviews.filter((r) => r.businessId === businessId)
+    : mockReviews;
+  relevant = filterByDateRange(relevant, range);
+
+  const distribution = [0, 0, 0, 0, 0];
+  relevant.forEach((r) => {
+    if (r.rating >= 1 && r.rating <= 5) {
+      distribution[r.rating - 1]++;
+    }
+  });
+  return distribution;
 }

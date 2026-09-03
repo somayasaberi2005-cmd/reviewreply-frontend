@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { getBusinesses } from "@/lib/api";
 import { Business } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Building2, AlertCircle } from "lucide-react";
+import { Building2, AlertCircle, CheckCircle2, XCircle } from "lucide-react";
 
 export default function BusinessesPage() {
   const [businesses, setBusinesses] = useState<Business[]>([]);
@@ -65,14 +66,33 @@ export default function BusinessesPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {businesses.map((business) => (
             <div key={business.id} className="card">
-              <div className="stat-icon bg-berry-50">
-                <Building2 size={18} className="text-berry-700" />
+              <div className="flex items-start justify-between mb-3">
+                <div className="stat-icon bg-berry-50">
+                  <Building2 size={18} className="text-berry-700" />
+                </div>
+                {business.googleConnected ? (
+                  <span className="flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full">
+                    <CheckCircle2 size={12} />
+                    Connected
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1 text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded-full">
+                    <XCircle size={12} />
+                    Not connected
+                  </span>
+                )}
               </div>
               <p className="font-medium text-slate-900">{business.name}</p>
               <p className="text-sm text-slate-500 mt-1">{business.city}, {business.state}</p>
-              <span className="inline-block mt-3 text-xs font-medium px-2 py-1 rounded-full bg-berry-50 text-berry-800">
-                {business.status}
-              </span>
+
+              {!business.googleConnected && (
+                <Link
+                  href="/settings"
+                  className="inline-block mt-3 text-xs font-medium text-berry-700 hover:text-berry-800"
+                >
+                  Connect now &rarr;
+                </Link>
+              )}
             </div>
           ))}
         </div>
