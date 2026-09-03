@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getReviews, updateReviewReplyStatus, updateReviewReplyBody, bulkUpdateReviewReplyStatus } from "@/lib/api";
 import { useBusinessContext } from "@/lib/business-context";
+import { useUserContext } from "@/lib/user-context";
 import { Review, ReplyStatus } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle } from "lucide-react";
@@ -43,6 +44,8 @@ const filterOptions: { label: string; value: "all" | ReplyStatus }[] = [
 
 export default function ReviewsPage() {
   const { selectedBusinessId } = useBusinessContext();
+  const { user } = useUserContext();
+  const canEdit = user.role !== "viewer";
   const searchParams = useSearchParams();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
@@ -204,7 +207,7 @@ export default function ReviewsPage() {
             />
           </div>
 
-          {selectablePending.length > 0 && (
+          {selectablePending.length > 0 && canEdit && (
             <div className="flex items-center gap-3 mb-4">
               <label className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
                 <input
@@ -249,7 +252,7 @@ export default function ReviewsPage() {
                 <div key={review.id} className="card">
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      {review.replyStatus === "pending" && (
+                      {review.replyStatus === "pending" && canEdit && (
                         <input
                           type="checkbox"
                           checked={selectedIds.includes(review.id)}
@@ -292,7 +295,7 @@ export default function ReviewsPage() {
                       ) : (
                         <div>
                           <p className="text-sm text-slate-600 mb-2">{review.reply.body}</p>
-                          {review.replyStatus === "pending" && (
+                          {review.replyStatus === "pending" && canEdit && (
                             <div className="flex gap-2">
                               <button onClick={() => updateReplyStatus(review.id, "posted")} className="text-xs font-medium px-3 py-1.5 rounded-md bg-berry-600 text-white hover:bg-berry-800">
                                 Approve

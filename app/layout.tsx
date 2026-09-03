@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { BusinessProvider } from "@/lib/business-context";
+import { UserProvider } from "@/lib/user-context";
 import { TopbarSearch } from "@/components/layout/TopbarSearch";
 import { NotificationBell } from "@/components/layout/NotificationBell";
+import { UserMenu } from "@/components/layout/UserMenu";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,6 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex bg-slate-50">
+        <UserProvider>
         <BusinessProvider>
           <Sidebar />
           <div className="flex-1 flex flex-col">
@@ -35,14 +38,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <TopbarSearch />
               <div className="flex items-center gap-4">
                 <NotificationBell />
-                <div className="w-8 h-8 rounded-full bg-berry-100 text-berry-800 flex items-center justify-center text-sm font-medium">
-                  U
-                </div>
+                <UserMenu />
               </div>
             </header>
             <main className="flex-1 p-8">{children}</main>
           </div>
         </BusinessProvider>
+        </UserProvider>
       </body>
     </html>
   );

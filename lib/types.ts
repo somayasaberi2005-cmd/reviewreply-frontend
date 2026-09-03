@@ -55,3 +55,10 @@ export type ReportSummary = {
   avgResponseTimeHours: number;
   sentiment: SentimentBreakdown;
 };
+export type UserRole = "owner" | "regional_manager" | "location_manager" | "viewer";
+
+export type CurrentUser = {
+  id: string;
+  name: string;
+  role: UserRole;
+};
