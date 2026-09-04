@@ -10,6 +10,9 @@ import {
   BarChart3,
   Settings,
   ChevronDown,
+  FileClock,
+  Users,
+  Users2,
 } from "lucide-react";
 import { useBusinessContext } from "@/lib/business-context";
 import { getPendingCountsByBusiness } from "@/lib/api";
@@ -28,6 +31,9 @@ const navGroups = [
       { name: "Businesses", href: "/businesses", icon: Building2 },
       { name: "Reports", href: "/reports", icon: BarChart3 },
       { name: "Settings", href: "/settings", icon: Settings },
+      { name: "Audit Log", href: "/audit-log", icon: FileClock },
+      { name: "Team", href: "/team", icon: Users },
+      { name: "Competitors", href: "/competitors", icon: Users2 },
     ],
   },
 ];

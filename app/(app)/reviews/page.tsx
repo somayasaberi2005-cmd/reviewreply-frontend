@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { getReviews, updateReviewReplyStatus, updateReviewReplyBody, bulkUpdateReviewReplyStatus } from "@/lib/api";
+import { getReviews, updateReviewReplyStatus, updateReviewReplyBody, bulkUpdateReviewReplyStatus, logAuditEvent } from "@/lib/api";
 import { useBusinessContext } from "@/lib/business-context";
 import { useUserContext } from "@/lib/user-context";
 import { useToast } from "@/lib/toast-context";
@@ -90,6 +90,12 @@ export default function ReviewsPage() {
       )
     );
     updateReviewReplyStatus(reviewId, newStatus);
+    const targetReview = reviews.find((r) => r.id === reviewId);
+    logAuditEvent(
+      newStatus === "posted" ? "Reply approved" : "Reply rejected",
+      user.name,
+      targetReview ? `${targetReview.reviewer.displayName}'s review` : "a review"
+    );
     showToast(newStatus === "posted" ? "Reply approved" : "Reply rejected");
   }
 

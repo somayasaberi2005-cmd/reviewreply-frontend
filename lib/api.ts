@@ -209,3 +209,72 @@ export async function getRatingDistribution(businessId?: string, range: DateRang
   });
   return distribution;
 }
+
+export type AuditLogEntry = {
+  id: string;
+  action: string;
+  actor: string;
+  target: string;
+  timestamp: string;
+};
+
+const auditLog: AuditLogEntry[] = [
+  { id: "a1", action: "Reply posted", actor: "AI (auto)", target: "Sadaf Ahmadi's review", timestamp: "2026-08-20T14:30:00Z" },
+];
+
+export function logAuditEvent(action: string, actor: string, target: string) {
+  auditLog.unshift({
+    id: `a${auditLog.length + 1}`,
+    action,
+    actor,
+    target,
+    timestamp: new Date().toISOString(),
+  });
+}
+
+export async function getAuditLog(): Promise<AuditLogEntry[]> {
+  await delay(200);
+  return auditLog;
+}
+
+export type TeamMember = {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+};
+
+const mockTeam: TeamMember[] = [
+  { id: "u1", name: "You", email: "you@roshan.af", role: "owner" },
+  { id: "u2", name: "Farida Nasiri", email: "farida@roshan.af", role: "regional_manager" },
+  { id: "u3", name: "Hamid Yousafi", email: "hamid@roshan.af", role: "location_manager" },
+  { id: "u4", name: "Zainab Rezai", email: "zainab@roshan.af", role: "viewer" },
+];
+
+export async function getTeamMembers(): Promise<TeamMember[]> {
+  await delay(300);
+  return mockTeam;
+}
+
+export type Competitor = {
+  id: string;
+  name: string;
+  rating: number;
+  totalReviews: number;
+};
+
+const mockCompetitors: Record<string, Competitor[]> = {
+  b1: [
+    { id: "c1", name: "Etisalat Afghanistan", rating: 4.1, totalReviews: 890 },
+    { id: "c2", name: "Afghan Wireless (AWCC)", rating: 3.8, totalReviews: 610 },
+  ],
+  b2: [
+    { id: "c3", name: "Kabul Bank", rating: 4.0, totalReviews: 430 },
+  ],
+};
+
+export async function getCompetitors(businessId?: string): Promise<Competitor[]> {
+  await delay(300);
+  if (!businessId) return [];
+  return mockCompetitors[businessId] ?? [];
+}

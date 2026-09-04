@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useBusinessContext } from "@/lib/business-context";
 import { useUserContext } from "@/lib/user-context";
 import { connectGoogleBusinessProfile } from "@/lib/api";
-import { CheckCircle2, ExternalLink, Lock } from "lucide-react";
+import { CheckCircle2, ExternalLink, Lock, Mail, MessagesSquare, MessageSquare } from "lucide-react";
 import { useToast } from "@/lib/toast-context";
 
 export default function SettingsPage() {
@@ -15,6 +15,9 @@ export default function SettingsPage() {
 
   const [autoReply, setAutoReply] = useState(true);
   const [notifyNegative, setNotifyNegative] = useState(true);
+  const [emailAlerts, setEmailAlerts] = useState(true);
+  const [slackAlerts, setSlackAlerts] = useState(false);
+  const [smsAlerts, setSmsAlerts] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [connectedOverride, setConnectedOverride] = useState<string | null>(null);
 
@@ -133,6 +136,53 @@ export default function SettingsPage() {
             className={`w-10 h-6 rounded-full transition-colors relative disabled:opacity-50 disabled:cursor-not-allowed ${notifyNegative ? "bg-berry-600" : "bg-slate-200"}`}
           >
             <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${notifyNegative ? "translate-x-4" : "translate-x-0.5"}`} />
+          </button>
+        </div>
+      </div>
+
+      <div className="card mb-4">
+        <p className="font-medium text-slate-900 mb-1">Notification channels</p>
+        <p className="text-sm text-slate-500 mb-4">Choose how you want to be alerted about negative reviews</p>
+
+        <div className="flex items-center justify-between py-2">
+          <div className="flex items-center gap-2">
+            <Mail size={16} className="text-slate-400" />
+            <p className="text-sm font-medium text-slate-900">Email</p>
+          </div>
+          <button
+            onClick={() => canEditSettings && setEmailAlerts(!emailAlerts)}
+            disabled={!canEditSettings}
+            className={`w-10 h-6 rounded-full transition-colors relative disabled:opacity-50 disabled:cursor-not-allowed ${emailAlerts ? "bg-berry-600" : "bg-slate-200"}`}
+          >
+            <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${emailAlerts ? "translate-x-4" : "translate-x-0.5"}`} />
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between py-2 border-t border-border mt-2 pt-4">
+          <div className="flex items-center gap-2">
+            <MessagesSquare size={16} className="text-slate-400" />
+            <p className="text-sm font-medium text-slate-900">Slack</p>
+          </div>
+          <button
+            onClick={() => canEditSettings && setSlackAlerts(!slackAlerts)}
+            disabled={!canEditSettings}
+            className={`w-10 h-6 rounded-full transition-colors relative disabled:opacity-50 disabled:cursor-not-allowed ${slackAlerts ? "bg-berry-600" : "bg-slate-200"}`}
+          >
+            <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${slackAlerts ? "translate-x-4" : "translate-x-0.5"}`} />
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between py-2 border-t border-border mt-2 pt-4">
+          <div className="flex items-center gap-2">
+            <MessageSquare size={16} className="text-slate-400" />
+            <p className="text-sm font-medium text-slate-900">SMS</p>
+          </div>
+          <button
+            onClick={() => canEditSettings && setSmsAlerts(!smsAlerts)}
+            disabled={!canEditSettings}
+            className={`w-10 h-6 rounded-full transition-colors relative disabled:opacity-50 disabled:cursor-not-allowed ${smsAlerts ? "bg-berry-600" : "bg-slate-200"}`}
+          >
+            <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${smsAlerts ? "translate-x-4" : "translate-x-0.5"}`} />
           </button>
         </div>
       </div>
