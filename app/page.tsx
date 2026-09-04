@@ -12,8 +12,8 @@ const features = [
 export default function Home() {
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-berry-600 via-berry-700 to-slate-900 p-12 flex-col justify-between overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-berry-400 rounded-full blur-3xl opacity-20 -translate-y-1/3 translate-x-1/3" />
+      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-b from-stone-900 to-stone-800 p-12 flex-col justify-between overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-berry-400 rounded-full blur-3xl opacity-15 -translate-y-1/3 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-berry-300 rounded-full blur-3xl opacity-10 translate-y-1/3 -translate-x-1/3" />
 
         <div className="relative z-10 flex items-center gap-2">
@@ -29,7 +29,7 @@ export default function Home() {
             <br />
             Every voice, on brand.
           </p>
-          <p className="text-berry-100 text-sm max-w-sm mb-10">
+          <p className="text-stone-300 text-sm max-w-sm mb-10">
             ReviewReply drafts and posts on-brand replies to your Google reviews automatically, so nothing falls through the cracks.
           </p>
 
@@ -41,14 +41,14 @@ export default function Home() {
                   <div className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm flex items-center justify-center flex-shrink-0">
                     <Icon size={15} className="text-white" />
                   </div>
-                  <p className="text-sm text-berry-50">{feature.text}</p>
+                  <p className="text-sm text-stone-200">{feature.text}</p>
                 </div>
               );
             })}
           </div>
         </div>
 
-        <p className="relative z-10 text-xs text-berry-200">&copy; 2026 ReviewReply</p>
+        <p className="relative z-10 text-xs text-stone-400">&copy; 2026 ReviewReply</p>
       </div>
 
       <div className="w-full lg:w-1/2 flex items-center justify-center bg-slate-50 px-6 py-12">
