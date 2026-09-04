@@ -6,8 +6,11 @@ import { getBusinesses } from "@/lib/api";
 import { Business } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Building2, AlertCircle, CheckCircle2, XCircle } from "lucide-react";
+import { useUserContext } from "@/lib/user-context";
 
 export default function BusinessesPage() {
+  const { user } = useUserContext();
+  const canEditSettings = user.role === "owner" || user.role === "regional_manager";
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -85,7 +88,7 @@ export default function BusinessesPage() {
               <p className="font-medium text-slate-900">{business.name}</p>
               <p className="text-sm text-slate-500 mt-1">{business.city}, {business.state}</p>
 
-              {!business.googleConnected && (
+              {!business.googleConnected && canEditSettings && (
                 <Link
                   href="/settings"
                   className="inline-block mt-3 text-xs font-medium text-berry-700 hover:text-berry-800"

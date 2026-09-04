@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { BusinessProvider } from "@/lib/business-context";
 import { UserProvider } from "@/lib/user-context";
 import { ToastProvider } from "@/lib/toast-context";
-import { AppShell } from "@/components/layout/AppShell";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,10 +29,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full">
         <ToastProvider>
           <UserProvider>
-          <BusinessProvider>
-            <AppShell>{children}</AppShell>
-          </BusinessProvider>
-        </UserProvider>
+            <BusinessProvider>{children}</BusinessProvider>
+          </UserProvider>
         </ToastProvider>
       </body>
     </html>

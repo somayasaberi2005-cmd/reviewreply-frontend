@@ -150,7 +150,11 @@
     @apply text-sm text-slate-500 mt-2;
   }
   .card {
-    @apply bg-white border border-border rounded-2xl shadow-sm p-5;
+    @apply bg-white border border-border rounded-2xl shadow-sm p-5 transition-all duration-200;
+  }
+  .card:hover {
+    @apply shadow-md;
+    transform: translateY(-2px);
   }
   .stat-icon {
     @apply w-10 h-10 rounded-xl flex items-center justify-center mb-3;

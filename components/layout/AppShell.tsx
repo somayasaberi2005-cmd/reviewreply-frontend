@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, ReactNode } from "react";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { TopbarSearch } from "@/components/layout/TopbarSearch";
 import { NotificationBell } from "@/components/layout/NotificationBell";
 import { UserMenu } from "@/components/layout/UserMenu";
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <div className="min-h-full flex bg-slate-50">
@@ -45,7 +47,11 @@ export function AppShell({ children }: { children: ReactNode }) {
             <UserMenu />
           </div>
         </header>
-        <main className="flex-1 p-4 sm:p-8 overflow-x-hidden">{children}</main>
+        <main className="flex-1 p-4 sm:p-8 overflow-x-hidden">
+          <div key={pathname} className="animate-in fade-in slide-in-from-bottom-1 duration-300">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   );
