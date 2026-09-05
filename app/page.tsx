@@ -12,7 +12,7 @@ const features = [
 export default function Home() {
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-b from-stone-900 to-stone-800 p-12 flex-col justify-between overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-b from-slate-900 to-stone-900 p-12 flex-col justify-between overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-berry-400 rounded-full blur-3xl opacity-15 -translate-y-1/3 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-berry-300 rounded-full blur-3xl opacity-10 translate-y-1/3 -translate-x-1/3" />
 

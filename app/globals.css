@@ -47,12 +47,12 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  --color-berry-50: #FBF3E1;
-  --color-berry-100: #F5E1B8;
-  --color-berry-200: #ECC97E;
-  --color-berry-400: #D4AF37;
-  --color-berry-600: #A6841F;
-  --color-berry-800: #6B5313;
+  --color-berry-50: #F1F8E3;
+  --color-berry-100: #DCEFB0;
+  --color-berry-200: #C3E278;
+  --color-berry-400: #8BC34A;
+  --color-berry-600: #5E8C2E;
+  --color-berry-800: #3D5A1C;
 }
 
 :root {
