@@ -1,4 +1,4 @@
-import { Review, DashboardStats, Business, ReportSummary, ReplyStatus } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -36,7 +36,7 @@ const mockReviews: Review[] = [
     reply: {
       id: "rep-2",
       reviewId: "2",
-      body: "Hi Ali, we're very sorry about the wait ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â that's not the experience we aim for. We'd love the chance to make it right.",
+      body: "Hi Ali, we're very sorry about the wait ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â that's not the experience we aim for. We'd love the chance to make it right.",
       status: "pending",
       source: "ai",
       publishedAt: null,
@@ -277,4 +277,303 @@ export async function getCompetitors(businessId?: string): Promise<Competitor[]>
   await delay(300);
   if (!businessId) return [];
   return mockCompetitors[businessId] ?? [];
+}
+// add Customer, NewCustomerInput to the existing import from "./types"
+
+const mockCustomers: Customer[] = [];
+
+export async function getCustomers(businessId: string): Promise<Customer[]> {
+  await delay(400);
+  return mockCustomers.filter((c) => c.businessId === businessId);
+}
+
+export async function addCustomer(input: NewCustomerInput): Promise<Customer> {
+  await delay(500);
+  const newCustomer: Customer = {
+    ...input,
+    id: `c${mockCustomers.length + 1}`,
+    createdAt: new Date().toISOString(),
+  };
+  mockCustomers.push(newCustomer);
+  return newCustomer;
+}
+
+export function getStaffFormLink(businessId: string): string {
+  return `https://app.yourdomain.com/staff/customer/${businessId}`;
+}
+
+export async function importCustomersFile(businessId: string, file: File): Promise<ImportSummary> {
+  await delay(1200);
+  return {
+    totalRows: 25,
+    imported: 23,
+    skipped: 2,
+  };
+}
+
+export function getImportStaffFormLink(businessId: string): string {
+  return `https://app.yourdomain.com/staff/import-customer/${businessId}`;
+}
+
+export function downloadSampleCustomerCsv() {
+  const header = "First Name,Last Name,Email,Mobile Phone,Custom ID\n";
+  const sample = "Jane,Doe,jane@example.com,(201) 555-0123,JOB-1001\n";
+  const blob = new Blob([header + sample], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "sample-customers.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+const mockRequestFlow: RequestFlowStep[] = [
+  {
+    id: "rating_request",
+    section: "core",
+    channel: "email_sms",
+    title: "Rating Request",
+    description: "This first message asks contacts for a rating.",
+    editable: false,
+    enabled: true,
+  },
+  {
+    id: "first_rating_reminder",
+    section: "core",
+    channel: "email_sms",
+    title: "First Rating Reminder",
+    description: "If the recipient does not leave a rating, they will get this reminder.",
+    editable: true,
+    enabled: true,
+    delayValue: 2,
+    delayUnit: "days",
+    delayContext: "after initial request",
+  },
+  {
+    id: "second_rating_reminder",
+    section: "core",
+    channel: "email_sms",
+    title: "Second Rating Reminder",
+    description: "A final nudge if the recipient still has not responded.",
+    editable: true,
+    enabled: false,
+    delayValue: 5,
+    delayUnit: "days",
+    delayContext: "after initial request",
+  },
+  {
+    id: "survey_questions",
+    section: "core",
+    channel: "web",
+    title: "Survey Questions",
+    description: "Contacts who click your request will be directed here to share more details about their experience.",
+    editable: false,
+    enabled: true,
+  },
+  {
+    id: "public_review_request",
+    section: "positive",
+    channel: "web",
+    title: "Public Review Request",
+    description: "If the contact provides positive feedback, ask them to share their experience publicly on sites like Google and Facebook.",
+    editable: false,
+    enabled: true,
+  },
+  {
+    id: "first_review_reminder",
+    section: "positive",
+    channel: "email",
+    title: "First Review Reminder",
+    description: "If the recipient does not click to the public review site, they will get this reminder.",
+    editable: true,
+    enabled: true,
+    delayValue: 4,
+    delayUnit: "hours",
+    delayContext: "after initial feedback",
+  },
+  {
+    id: "second_review_reminder",
+    section: "positive",
+    channel: "email",
+    title: "Second Review Reminder",
+    description: "A final nudge to leave a public review.",
+    editable: true,
+    enabled: true,
+    delayValue: 2,
+    delayUnit: "days",
+    delayContext: "after initial feedback",
+  },
+  {
+    id: "apology_page",
+    section: "negative",
+    channel: "web",
+    title: "Apology Page",
+    description: "If the contact leaves a negative rating, apologize and ask for details. This page avoids linking to public review sites.",
+    editable: false,
+    enabled: true,
+  },
+  {
+    id: "negative_feedback_page",
+    section: "negative",
+    channel: "web",
+    title: "Negative Feedback Page",
+    description: "Collect more private details about the negative experience.",
+    editable: false,
+    enabled: true,
+  },
+  {
+    id: "submission_confirmation",
+    section: "negative",
+    channel: "web",
+    title: "Submission Confirmation",
+    description: "Page that confirms the private feedback was received.",
+    editable: false,
+    enabled: true,
+  },
+  {
+    id: "apology_email",
+    section: "negative",
+    channel: "email",
+    title: "Apology Email",
+    description: "Sent to the customer after they submit private negative feedback.",
+    editable: true,
+    enabled: true,
+  },
+];
+
+export async function getRequestFlow(businessId: string): Promise<RequestFlowSettings> {
+  await delay(400);
+  return { flowType: "survey_reviews", steps: mockRequestFlow };
+}
+
+export async function updateRequestFlowStep(
+  businessId: string,
+  stepId: RequestFlowStepId,
+  changes: Partial<Pick<RequestFlowStep, "enabled" | "delayValue" | "delayUnit">>
+): Promise<void> {
+  await delay(300);
+  const step = mockRequestFlow.find((s) => s.id === stepId);
+  if (step) Object.assign(step, changes);
+}
+
+
+let mockSmsSettings: SmsSettings = {
+  messageType: "sms",
+  message: "Hi! We'd love your feedback, please click the link:",
+  includeFeedbackUrl: true,
+  feedbackUrl: "https://app.yourdomain.com/d-6MjSK",
+};
+
+export async function getSmsSettings(businessId: string): Promise<SmsSettings> {
+  await delay(300);
+  return mockSmsSettings;
+}
+
+export async function updateSmsSettings(businessId: string, settings: SmsSettings): Promise<void> {
+  await delay(400);
+  mockSmsSettings = settings;
+}
+
+export async function sendTestSms(businessId: string): Promise<void> {
+  await delay(500);
+}
+
+let mockKioskSettings: KioskSettings = {
+  kioskUrl: "https://app.yourdomain.com/k-b1",
+  steps: [
+    {
+      id: "landing_page",
+      icon: "web",
+      title: "Kiosk Mode: Feedback Landing Page",
+      status: "unchanged",
+      description: "The Feedback Landing Page questions are pulled from Request Setup. Complete Request Setup before using Kiosk Mode.",
+      content: "Please tell us about your experience.",
+    },
+    {
+      id: "thank_you_page",
+      icon: "web",
+      title: "Kiosk Mode: Positive Feedback - Thank You Page",
+      status: "Edited recently",
+      description: "This is the thank-you page text that appears after someone leaves positive feedback.",
+      content: "Thank you so much for your feedback! We really appreciate it.",
+    },
+    {
+      id: "review_request_email",
+      icon: "email",
+      title: "Kiosk Mode: Positive Email - Review Request",
+      status: "Edited recently",
+      description: "This is the email sent to customers after they leave positive feedback. A delay gives them time before being asked for an online review.",
+      content: "Hi! Thanks again for the kind words. Would you mind sharing that publicly too?",
+      hasTiming: true,
+      timingEnabled: false,
+      timingValue: 4,
+      timingUnit: "hours",
+    },
+    {
+      id: "negative_apology",
+      icon: "web",
+      title: "Kiosk Mode: Negative Feedback - Apology",
+      status: "Edited recently",
+      description: "Follow-up for a poor experience rating and request for more info.",
+      content: "We are sorry to hear your experience did not meet expectations. Please tell us more.",
+    },
+  ],
+};
+
+export async function getKioskSettings(businessId: string): Promise<KioskSettings> {
+  await delay(400);
+  return mockKioskSettings;
+}
+
+export async function updateKioskTemplate(
+  businessId: string,
+  stepId: string,
+  changes: Partial<KioskTemplateStep>
+): Promise<void> {
+  await delay(300);
+  const step = mockKioskSettings.steps.find((s) => s.id === stepId);
+  if (step) Object.assign(step, changes);
+}
+
+let mockTextBackSettings: TextBackSettings = {
+  active: false,
+  country: "US",
+  phoneNumber: "",
+  keywords: ["feedback"],
+  autoReplyMessage: "Hi! We'd love your feedback, please click the link:",
+  feedbackUrl: "https://app.yourdomain.com/f-b1",
+};
+
+export async function getTextBackSettings(businessId: string): Promise<TextBackSettings> {
+  await delay(300);
+  return mockTextBackSettings;
+}
+
+export async function updateTextBackSettings(businessId: string, settings: TextBackSettings): Promise<void> {
+  await delay(400);
+  mockTextBackSettings = settings;
+}
+
+let mockSignatureSurvey: EmailSignatureSurveySettings = {
+  widgetSize: "large",
+  promptText: "How did we do?",
+  redirectUrl: "",
+  trackClicks: true,
+};
+
+export async function getEmailSignatureSurvey(businessId: string): Promise<EmailSignatureSurveySettings> {
+  await delay(300);
+  return mockSignatureSurvey;
+}
+
+export async function updateEmailSignatureSurvey(
+  businessId: string,
+  settings: EmailSignatureSurveySettings
+): Promise<void> {
+  await delay(400);
+  mockSignatureSurvey = settings;
+}
+
+export function getSignatureWidgetSnippet(businessId: string): string {
+  return `<a href="https://app.yourdomain.com/survey/${businessId}">How did we do?</a>`;
 }

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -13,6 +13,7 @@ import {
   FileClock,
   Users,
   Users2,
+  Send,
 } from "lucide-react";
 import { useBusinessContext } from "@/lib/business-context";
 import { getPendingCountsByBusiness } from "@/lib/api";
@@ -23,6 +24,20 @@ const navGroups = [
     items: [
       { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
       { name: "Reviews", href: "/reviews", icon: MessageSquareText },
+      {
+        name: "Requests",
+        href: "/requests",
+        icon: Send,
+        children: [
+          { name: "Add Customer", href: "/requests/add-customer" },
+          { name: "Import Customers", href: "/requests/import" },
+          { name: "Request Setup", href: "/requests/setup" },
+          { name: "SMS Requests", href: "/requests/sms" },
+          { name: "Kiosk Mode", href: "/requests/kiosk" },
+          { name: "TextBack", href: "/requests/textback" },
+          { name: "Email Signature Survey", href: "/requests/email-signature" },
+        ],
+      },
     ],
   },
   {
@@ -67,26 +82,66 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
             <p className="nav-group-label">{group.label}</p>
             <div className="space-y-1">
               {group.items.map((item) => {
+                const hasChildren = "children" in item && !!item.children;
+                const isParentActive = pathname.startsWith(item.href);
                 const isActive = pathname === item.href;
                 const Icon = item.icon;
 
+                if (!hasChildren) {
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={onNavigate}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors border-l-2 ${
+                        isActive
+                          ? "bg-berry-50 text-berry-800 border-berry-600"
+                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-transparent"
+                      }`}
+                    >
+                      <Icon size={18} className={isActive ? "text-berry-600" : "text-slate-400"} />
+                      {item.name}
+                    </Link>
+                  );
+                }
+
                 return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={onNavigate}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors border-l-2 ${
-                      isActive
-                        ? "bg-berry-50 text-berry-800 border-berry-600"
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-transparent"
-                    }`}
-                  >
-                    <Icon
-                      size={18}
-                      className={isActive ? "text-berry-600" : "text-slate-400"}
-                    />
-                    {item.name}
-                  </Link>
+                  <div key={item.href}>
+                    <Link
+                      href={item.children![0].href}
+                      onClick={onNavigate}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors border-l-2 ${
+                        isParentActive
+                          ? "bg-berry-50 text-berry-800 border-berry-600"
+                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-transparent"
+                      }`}
+                    >
+                      <Icon size={18} className={isParentActive ? "text-berry-600" : "text-slate-400"} />
+                      {item.name}
+                    </Link>
+
+                    {isParentActive && (
+                      <div className="ml-[1.875rem] mt-1 space-y-0.5 border-l border-border pl-3">
+                        {item.children!.map((child) => {
+                          const isChildActive = pathname === child.href;
+                          return (
+                            <Link
+                              key={child.href}
+                              href={child.href}
+                              onClick={onNavigate}
+                              className={`block px-2 py-1.5 rounded-md text-sm transition-colors ${
+                                isChildActive
+                                  ? "text-berry-800 font-medium bg-berry-50"
+                                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-50"
+                              }`}
+                            >
+                              {child.name}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>
