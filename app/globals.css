@@ -199,3 +199,18 @@
     color: #5E8C2E;
   }
 }
+
+@media print {
+  aside, header {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+  }
+  body {
+    background: white !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

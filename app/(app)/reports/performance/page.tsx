@@ -6,7 +6,8 @@ import { getPerformanceReport } from "@/lib/api";
 import { useBusinessContext } from "@/lib/business-context";
 import { PerformanceSummary } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Send, MailOpen, MessageSquare, MousePointerClick, Star } from "lucide-react";
+import { SavePdfButton } from "@/components/reports/SavePdfButton";
+import { Send, MailOpen, MessageSquare, MousePointerClick, Star, FileDown } from "lucide-react";
 
 function StatCard({
   icon: Icon,
@@ -50,6 +51,7 @@ export default function PerformanceReportPage() {
       <div className="mb-6">
         <h1 className="page-title">Performance Report</h1>
         <p className="page-subtitle">Track how your review requests are performing over time.</p>
+        <button onClick={() => window.print()} className="no-print text-sm font-medium px-3 py-1.5 rounded-md border border-border text-slate-600 hover:bg-slate-50 flex items-center gap-1.5 mt-3"><FileDown size={14} /> Save as PDF</button>
       </div>
 
       {loading || !data ? (
@@ -111,3 +113,5 @@ export default function PerformanceReportPage() {
     </div>
   );
 }
+
+

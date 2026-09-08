@@ -6,6 +6,7 @@ import { getReviewsReport } from "@/lib/api";
 import { useBusinessContext } from "@/lib/business-context";
 import { ReviewsReportSummary } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { SavePdfButton } from "@/components/reports/SavePdfButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Download, Star } from "lucide-react";
 
@@ -182,6 +183,7 @@ export default function ReviewsReportPage() {
                   onChange={(e) => setSearch(e.target.value)}
                   className="text-sm border border-border rounded-md px-3 py-1.5"
                 />
+                <SavePdfButton />
                 <Button variant="outline" size="sm" onClick={downloadCsv}>
                   <Download size={14} /> Download CSV
                 </Button>
@@ -226,3 +228,4 @@ export default function ReviewsReportPage() {
     </div>
   );
 }
+

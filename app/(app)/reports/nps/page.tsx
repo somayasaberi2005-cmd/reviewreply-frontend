@@ -6,6 +6,7 @@ import { getNpsReport } from "@/lib/api";
 import { useBusinessContext } from "@/lib/business-context";
 import { NpsReportSummary } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SavePdfButton } from "@/components/reports/SavePdfButton";
 
 function NpsGauge({ score }: { score: number }) {
   const clamped = Math.max(-100, Math.min(100, score));
@@ -66,6 +67,7 @@ export default function NpsReportPage() {
     <div>
       <div className="mb-6">
         <h1 className="page-title">Net Promoter Score Report</h1>
+        <SavePdfButton />
         <p className="page-subtitle">
           Dig into your Net Promoter Score and see your distribution of promoters, passives, and detractors.
         </p>
@@ -152,3 +154,4 @@ export default function NpsReportPage() {
     </div>
   );
 }
+

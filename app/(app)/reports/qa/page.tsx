@@ -5,6 +5,7 @@ import { getQaEntries } from "@/lib/api";
 import { useBusinessContext } from "@/lib/business-context";
 import { QaEntry, QaStatus } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { SavePdfButton } from "@/components/reports/SavePdfButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Download } from "lucide-react";
 
@@ -101,6 +102,7 @@ export default function QaReportPage() {
                   {status}
                 </button>
               ))}
+              <SavePdfButton />
               <Button variant="outline" size="sm" onClick={downloadCsv}>
                 <Download size={14} /> Download CSV
               </Button>
@@ -147,3 +149,4 @@ export default function QaReportPage() {
     </div>
   );
 }
+

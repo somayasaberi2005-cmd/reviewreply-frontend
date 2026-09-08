@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getBusinessReport } from "@/lib/api";
 import { BusinessReportRow } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { SavePdfButton } from "@/components/reports/SavePdfButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Download, ArrowUpDown } from "lucide-react";
 
@@ -99,6 +100,7 @@ export default function BusinessReportPage() {
               onChange={(e) => setSearch(e.target.value)}
               className="text-sm border border-border rounded-md px-3 py-1.5 sm:max-w-xs"
             />
+            <SavePdfButton />
             <Button variant="outline" size="sm" onClick={downloadCsv}>
               <Download size={14} /> Email CSV
             </Button>
@@ -146,3 +148,4 @@ export default function BusinessReportPage() {
     </div>
   );
 }
+

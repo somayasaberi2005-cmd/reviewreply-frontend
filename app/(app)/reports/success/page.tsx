@@ -5,6 +5,7 @@ import { getSuccessReport } from "@/lib/api";
 import { useBusinessContext } from "@/lib/business-context";
 import { SuccessReportSummary } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { SavePdfButton } from "@/components/reports/SavePdfButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Download } from "lucide-react";
 
@@ -122,6 +123,7 @@ export default function SuccessReportPage() {
                   onChange={(e) => setSearch(e.target.value)}
                   className="text-sm border border-border rounded-md px-3 py-1.5"
                 />
+                <SavePdfButton />
                 <Button variant="outline" size="sm" onClick={downloadCsv}>
                   <Download size={14} /> Download CSV
                 </Button>
@@ -166,3 +168,4 @@ export default function SuccessReportPage() {
     </div>
   );
 }
+

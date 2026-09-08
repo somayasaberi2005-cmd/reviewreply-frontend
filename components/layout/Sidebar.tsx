@@ -14,6 +14,7 @@ import {
   Users,
   Users2,
   Send,
+  Plug,
 } from "lucide-react";
 import { useBusinessContext } from "@/lib/business-context";
 import { getPendingCountsByBusiness } from "@/lib/api";
@@ -38,13 +39,28 @@ const navGroups = [
           { name: "Email Signature Survey", href: "/requests/email-signature" },
         ],
       },
+      { name: "Integrations", href: "/integrations", icon: Plug },
     ],
   },
   {
     label: "Manage",
     items: [
       { name: "Businesses", href: "/businesses", icon: Building2 },
-      { name: "Reports", href: "/reports", icon: BarChart3 },
+      {
+        name: "Reports",
+        href: "/reports",
+        icon: BarChart3,
+        children: [
+          { name: "Smart Insights", href: "/reports/smart-insights" },
+          { name: "Performance Report", href: "/reports/performance" },
+          { name: "Reviews Report", href: "/reports/reviews-report" },
+          { name: "NPS Report", href: "/reports/nps" },
+          { name: "Success Report", href: "/reports/success" },
+          { name: "Business Report", href: "/reports/business" },
+          { name: "Q&A Report", href: "/reports/qa" },
+          { name: "Competitor Report", href: "/reports/competitor" },
+        ],
+      },
       { name: "Settings", href: "/settings", icon: Settings },
       { name: "Audit Log", href: "/audit-log", icon: FileClock },
       { name: "Team", href: "/team", icon: Users },
