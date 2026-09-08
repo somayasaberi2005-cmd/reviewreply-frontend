@@ -167,3 +167,12 @@ export type EmailSignatureSurveySettings = {
   redirectUrl: string;
   trackClicks: boolean;
 };
+
+export type IntegrationId = "universal_email" | "google_sheets";
+
+export type Integration = {
+  id: IntegrationId;
+  name: string;
+  description: string;
+  connected: boolean;
+};

@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -576,4 +576,34 @@ export async function updateEmailSignatureSurvey(
 
 export function getSignatureWidgetSnippet(businessId: string): string {
   return `<a href="https://app.yourdomain.com/survey/${businessId}">How did we do?</a>`;
+}
+
+let mockIntegrations: Integration[] = [
+  {
+    id: "universal_email",
+    name: "Universal Email Integration",
+    description: "Use a simple BCC email to schedule a review request after you send a transactional email.",
+    connected: false,
+  },
+  {
+    id: "google_sheets",
+    name: "Google Sheets",
+    description: "Add customers to a Google Sheet to add them to your request sequence.",
+    connected: false,
+  },
+];
+
+export async function getIntegrations(businessId: string): Promise<Integration[]> {
+  await delay(300);
+  return mockIntegrations;
+}
+
+export async function setIntegrationConnected(
+  businessId: string,
+  id: IntegrationId,
+  connected: boolean
+): Promise<void> {
+  await delay(400);
+  const integration = mockIntegrations.find((i) => i.id === id);
+  if (integration) integration.connected = connected;
 }
