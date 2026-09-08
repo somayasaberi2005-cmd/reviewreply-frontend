@@ -198,3 +198,85 @@ export type PerformanceSummary = {
   newReviews: number;
   trend: PerformanceDataPoint[];
 };
+
+export type ReviewReportDetail = {
+  id: string;
+  site: string;
+  rating: number;
+  reviewContent: string;
+  date: string;
+  name: string;
+};
+
+export type ReviewsReportSummary = {
+  overallRating: number;
+  totalReviews: number;
+  newLast30Days: number;
+  newSinceJoining: number;
+  ratingBreakdown: { stars: number; count: number }[];
+  sources: { name: string; count: number }[];
+  monthly: { month: string; count: number }[];
+  details: ReviewReportDetail[];
+};
+
+export type NpsDataPoint = {
+  month: string;
+  score: number;
+};
+
+export type NpsReportSummary = {
+  score: number;
+  promoterPct: number;
+  passivePct: number;
+  detractorPct: number;
+  promoterCount: number;
+  passiveCount: number;
+  detractorCount: number;
+  totalResponses: number;
+  trend: NpsDataPoint[];
+};
+
+export type SuccessReportSummary = {
+  npsScore: number;
+  npsPromoterPct: number;
+  npsDetractorPct: number;
+  npsTotalResponses: number;
+  thirdPartyRating: number;
+  thirdPartyTotal: number;
+  thirdPartySinceJoining: number;
+  firstPartyRating: number;
+  firstPartyTotal: number;
+  firstPartyLast30Days: number;
+  details: ReviewReportDetail[];
+};
+
+export type BusinessReportRow = {
+  businessId: string;
+  businessName: string;
+  locationId: string;
+  rating: number;
+  requestsSent: number;
+  opens: number;
+  openRate: number;
+  feedbackReceived: number;
+  feedbackRate: number;
+  responseRate: number;
+  reviewClicks: number;
+  newReviews: number;
+  totalReviews: number;
+};
+
+export type QaStatus = "open" | "closed" | "reported" | "removed";
+
+export type QaEntry = {
+  id: string;
+  location: string;
+  question: string;
+  answer: string;
+  date: string;
+  status: QaStatus;
+};
+
+export type CompetitorReportStatus = {
+  enabled: boolean;
+};

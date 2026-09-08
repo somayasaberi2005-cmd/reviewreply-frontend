@@ -166,3 +166,36 @@
     @apply text-xs font-medium text-slate-400 uppercase tracking-wide px-3 mb-1 mt-4;
   }
 }
+@layer utilities {
+  @keyframes star-pop {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes reply-fade {
+    0% { opacity: 0; transform: translateY(6px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .animate-star-pop {
+    animation: star-pop 0.4s ease-out both;
+  }
+  .animate-reply-fade {
+    animation: reply-fade 0.5s ease-out both;
+  }
+}
+
+@layer base {
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #0f172a;
+    box-shadow: 0 0 0px 1000px white inset;
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+    transition: background-color 9999s ease-in-out 0s;
+  }
+  input:-webkit-autofill + label {
+    top: 0.375rem;
+    font-size: 10px;
+    color: #5E8C2E;
+  }
+}

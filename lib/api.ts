@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -638,4 +638,184 @@ export async function getPerformanceReport(businessId: string): Promise<Performa
     newReviews: Math.round(feedbackReceived * 0.4),
     trend,
   };
+}
+
+export async function getReviewsReport(businessId: string): Promise<ReviewsReportSummary> {
+  await delay(500);
+  const details: ReviewReportDetail[] = [
+    { id: "rr1", site: "Google", rating: 5, reviewContent: "Fantastic service, will come back again!", date: "2026-08-20", name: "Sadaf Ahmadi" },
+    { id: "rr2", site: "Google", rating: 2, reviewContent: "Waited 40 minutes for my order.", date: "2026-08-25", name: "Ali Rahimi" },
+    { id: "rr3", site: "Facebook", rating: 5, reviewContent: "Best experience in the city, highly recommend.", date: "2026-08-28", name: "Nadia Kabiri" },
+    { id: "rr4", site: "Google", rating: 4, reviewContent: "Good overall, staff were friendly.", date: "2026-09-01", name: "Omar Sultani" },
+    { id: "rr5", site: "Facebook", rating: 3, reviewContent: "Average, nothing special.", date: "2026-09-03", name: "Latifa Noori" },
+  ];
+  return {
+    overallRating: 4.6,
+    totalReviews: details.length,
+    newLast30Days: 3,
+    newSinceJoining: details.length,
+    ratingBreakdown: [
+      { stars: 5, count: 2 },
+      { stars: 4, count: 1 },
+      { stars: 3, count: 1 },
+      { stars: 2, count: 1 },
+      { stars: 1, count: 0 },
+    ],
+    sources: [
+      { name: "Google", count: 3 },
+      { name: "Facebook", count: 2 },
+    ],
+    monthly: [
+      { month: "Apr", count: 2 },
+      { month: "May", count: 4 },
+      { month: "Jun", count: 3 },
+      { month: "Jul", count: 5 },
+      { month: "Aug", count: 6 },
+      { month: "Sep", count: 5 },
+    ],
+    details,
+  };
+}
+
+export async function getNpsReport(businessId: string): Promise<NpsReportSummary> {
+  await delay(500);
+  const months = ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"];
+  const trend: NpsDataPoint[] = months.map((month, i) => ({
+    month,
+    score: Math.round(10 + i * 3 + Math.sin(i) * 8),
+  }));
+  const promoterCount = 9;
+  const passiveCount = 7;
+  const detractorCount = 3;
+  const totalResponses = promoterCount + passiveCount + detractorCount;
+  const promoterPct = Math.round((promoterCount / totalResponses) * 100);
+  const detractorPct = Math.round((detractorCount / totalResponses) * 100);
+  return {
+    score: promoterPct - detractorPct,
+    promoterPct,
+    passivePct: Math.round((passiveCount / totalResponses) * 100),
+    detractorPct,
+    promoterCount,
+    passiveCount,
+    detractorCount,
+    totalResponses,
+    trend,
+  };
+}
+
+export async function getSuccessReport(businessId: string): Promise<SuccessReportSummary> {
+  await delay(500);
+  const details: ReviewReportDetail[] = [
+    { id: "sr1", site: "Google", rating: 5, reviewContent: "Fantastic service, will come back again!", date: "2026-08-20", name: "Sadaf Ahmadi" },
+    { id: "sr2", site: "Facebook", rating: 5, reviewContent: "Best experience in the city, highly recommend.", date: "2026-08-28", name: "Nadia Kabiri" },
+    { id: "sr3", site: "Google", rating: 4, reviewContent: "Good overall, staff were friendly.", date: "2026-09-01", name: "Omar Sultani" },
+  ];
+  return {
+    npsScore: 42,
+    npsPromoterPct: 56,
+    npsDetractorPct: 14,
+    npsTotalResponses: 19,
+    thirdPartyRating: 4.6,
+    thirdPartyTotal: 5,
+    thirdPartySinceJoining: 5,
+    firstPartyRating: 4.8,
+    firstPartyTotal: 12,
+    firstPartyLast30Days: 4,
+    details,
+  };
+}
+
+export async function getBusinessReport(): Promise<BusinessReportRow[]> {
+  await delay(500);
+  return [
+    {
+      businessId: "b1",
+      businessName: "Roshan",
+      locationId: "#174190",
+      rating: 4.6,
+      requestsSent: 128,
+      opens: 79,
+      openRate: 61.7,
+      feedbackReceived: 42,
+      feedbackRate: 32.8,
+      responseRate: 94,
+      reviewClicks: 23,
+      newReviews: 5,
+      totalReviews: 18,
+    },
+    {
+      businessId: "b2",
+      businessName: "Roshan - Downtown",
+      locationId: "#174191",
+      rating: 4.3,
+      requestsSent: 96,
+      opens: 55,
+      openRate: 57.3,
+      feedbackReceived: 31,
+      feedbackRate: 32.3,
+      responseRate: 88,
+      reviewClicks: 18,
+      newReviews: 3,
+      totalReviews: 12,
+    },
+    {
+      businessId: "b3",
+      businessName: "Roshan - Westside",
+      locationId: "#174192",
+      rating: 4.8,
+      requestsSent: 74,
+      opens: 51,
+      openRate: 68.9,
+      feedbackReceived: 29,
+      feedbackRate: 39.2,
+      responseRate: 97,
+      reviewClicks: 20,
+      newReviews: 6,
+      totalReviews: 15,
+    },
+  ];
+}
+
+const mockQaEntries: QaEntry[] = [
+  {
+    id: "qa1",
+    location: "Roshan",
+    question: "Do you offer weekend appointments?",
+    answer: "Yes, we're open Saturdays 9am-3pm.",
+    date: "2026-08-14",
+    status: "closed",
+  },
+  {
+    id: "qa2",
+    location: "Roshan",
+    question: "Is parking available on-site?",
+    answer: "",
+    date: "2026-08-30",
+    status: "open",
+  },
+  {
+    id: "qa3",
+    location: "Roshan - Downtown",
+    question: "Can I reschedule online?",
+    answer: "Not yet, please call the front desk.",
+    date: "2026-09-02",
+    status: "closed",
+  },
+];
+
+export async function getQaEntries(businessId: string): Promise<QaEntry[]> {
+  await delay(400);
+  return mockQaEntries;
+}
+
+let mockCompetitorReportStatus: CompetitorReportStatus = { enabled: false };
+
+export async function getCompetitorReportStatus(businessId: string): Promise<CompetitorReportStatus> {
+  await delay(300);
+  return mockCompetitorReportStatus;
+}
+
+export async function enableCompetitorReport(businessId: string): Promise<void> {
+  await delay(600);
+  mockCompetitorReportStatus = { enabled: true };
 }
