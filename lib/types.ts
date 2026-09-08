@@ -176,3 +176,25 @@ export type Integration = {
   description: string;
   connected: boolean;
 };
+
+export type SmartInsight = {
+  id: string;
+  text: string;
+};
+
+export type PerformanceDataPoint = {
+  month: string;
+  requestsSent: number;
+  feedbackReceived: number;
+};
+
+export type PerformanceSummary = {
+  requestsSent: number;
+  opens: number;
+  openRate: number;
+  feedbackReceived: number;
+  feedbackRate: number;
+  reviewClicks: number;
+  newReviews: number;
+  trend: PerformanceDataPoint[];
+};

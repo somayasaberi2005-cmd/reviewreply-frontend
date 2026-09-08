@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -606,4 +606,36 @@ export async function setIntegrationConnected(
   await delay(400);
   const integration = mockIntegrations.find((i) => i.id === id);
   if (integration) integration.connected = connected;
+}
+
+export async function generateSmartInsights(businessId: string): Promise<SmartInsight[]> {
+  await delay(1500);
+  return [
+    { id: "i1", text: "Customers frequently mention slow response times during peak hours. Consider adding staff or a queue system between 12-2pm." },
+    { id: "i2", text: "Several reviews praise your staff by name. Highlighting this in marketing could reinforce your service reputation." },
+    { id: "i3", text: "A recurring theme is difficulty finding parking. Adding signage or partnering with a nearby lot could reduce friction." },
+  ];
+}
+
+export async function getPerformanceReport(businessId: string): Promise<PerformanceSummary> {
+  await delay(500);
+  const months = ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"];
+  const trend = months.map((month, i) => ({
+    month,
+    requestsSent: 40 + i * 6 + Math.round(Math.sin(i) * 5),
+    feedbackReceived: 12 + i * 3 + Math.round(Math.cos(i) * 3),
+  }));
+  const requestsSent = trend.reduce((sum, t) => sum + t.requestsSent, 0);
+  const feedbackReceived = trend.reduce((sum, t) => sum + t.feedbackReceived, 0);
+  const opens = Math.round(requestsSent * 0.62);
+  return {
+    requestsSent,
+    opens,
+    openRate: Math.round((opens / requestsSent) * 1000) / 10,
+    feedbackReceived,
+    feedbackRate: Math.round((feedbackReceived / requestsSent) * 1000) / 10,
+    reviewClicks: Math.round(feedbackReceived * 0.55),
+    newReviews: Math.round(feedbackReceived * 0.4),
+    trend,
+  };
 }
