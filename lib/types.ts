@@ -376,3 +376,21 @@ export type NotificationSettings = {
   essential: NotificationRule[];
   advanced: NotificationRule[];
 };
+
+export type BrandSettings = {
+  logoUrl: string | null;
+  accentColor: string;
+  bannerUrl: string | null;
+};
+
+export type ReviewSiteId = "google" | "facebook" | "yelp" | "tripadvisor";
+
+export type ReviewSiteLink = {
+  id: string;
+  site: ReviewSiteId;
+  url: string;
+  cidNumber: string;
+  askForReviews: boolean;
+  monitorReviews: boolean;
+  order: number;
+};

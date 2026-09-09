@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1071,4 +1071,78 @@ export async function updateNotificationRule(
     mockNotificationSettings.essential.find((r) => r.id === ruleId) ||
     mockNotificationSettings.advanced.find((r) => r.id === ruleId);
   if (rule) Object.assign(rule, changes);
+}
+
+let mockBrandSettings: BrandSettings = {
+  logoUrl: null,
+  accentColor: "#5E8C2E",
+  bannerUrl: null,
+};
+
+export async function getBrandSettings(businessId: string): Promise<BrandSettings> {
+  await delay(300);
+  return mockBrandSettings;
+}
+
+export async function updateBrandSettings(businessId: string, settings: BrandSettings): Promise<void> {
+  await delay(400);
+  mockBrandSettings = settings;
+}
+
+let mockReviewSiteLinks: ReviewSiteLink[] = [
+  {
+    id: "rl1",
+    site: "google",
+    url: "https://search.google.com/local/writereview?placeid=",
+    cidNumber: "",
+    askForReviews: true,
+    monitorReviews: true,
+    order: 1,
+  },
+];
+
+export async function getReviewSiteLinks(businessId: string): Promise<ReviewSiteLink[]> {
+  await delay(300);
+  return mockReviewSiteLinks;
+}
+
+export async function addReviewSiteLink(businessId: string, site: ReviewSiteId): Promise<ReviewSiteLink> {
+  await delay(400);
+  const link: ReviewSiteLink = {
+    id: `rl${mockReviewSiteLinks.length + 1}`,
+    site,
+    url: "",
+    cidNumber: "",
+    askForReviews: true,
+    monitorReviews: true,
+    order: mockReviewSiteLinks.length + 1,
+  };
+  mockReviewSiteLinks.push(link);
+  return link;
+}
+
+export async function updateReviewSiteLink(
+  businessId: string,
+  id: string,
+  changes: Partial<ReviewSiteLink>
+): Promise<void> {
+  await delay(300);
+  const link = mockReviewSiteLinks.find((l) => l.id === id);
+  if (link) Object.assign(link, changes);
+}
+
+export async function deleteReviewSiteLink(businessId: string, id: string): Promise<void> {
+  await delay(300);
+  mockReviewSiteLinks = mockReviewSiteLinks.filter((l) => l.id !== id);
+}
+
+export async function moveReviewSiteLink(businessId: string, id: string, direction: "up" | "down"): Promise<void> {
+  await delay(200);
+  const index = mockReviewSiteLinks.findIndex((l) => l.id === id);
+  const swapIndex = direction === "up" ? index - 1 : index + 1;
+  if (index < 0 || swapIndex < 0 || swapIndex >= mockReviewSiteLinks.length) return;
+  [mockReviewSiteLinks[index], mockReviewSiteLinks[swapIndex]] = [
+    mockReviewSiteLinks[swapIndex],
+    mockReviewSiteLinks[index],
+  ];
 }
