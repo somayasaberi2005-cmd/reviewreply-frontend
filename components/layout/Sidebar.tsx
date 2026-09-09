@@ -63,7 +63,7 @@ const navGroups = [
         ],
       },
       { name: "Publish", href: "/publish", icon: Upload, children: [{ name: "Review Widget", href: "/publish/review-widget" }] },
-      { name: "Settings", href: "/settings", icon: Settings, children: [{ name: "AI Reply Prompts", href: "/settings/ai-reply-prompts" }, { name: "Auto-Tagging", href: "/settings/auto-tagging" }, { name: "Auto-Replies", href: "/settings/auto-replies" }] },
+      { name: "Settings", href: "/settings", icon: Settings, children: [{ name: "AI Reply Prompts", href: "/settings/ai-reply-prompts" }, { name: "Auto-Tagging", href: "/settings/auto-tagging" }, { name: "Auto-Replies", href: "/settings/auto-replies" }, { name: "Notifications", href: "/settings/notifications" }] },
       { name: "Audit Log", href: "/audit-log", icon: FileClock },
       { name: "Team", href: "/team", icon: Users },
       { name: "Competitors", href: "/competitors", icon: Users2 },
@@ -231,6 +231,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     </aside>
   );
 }
+
 
 
 

@@ -361,3 +361,18 @@ export type AutoReplySettings = {
   replyToReviewsWithoutText: boolean;
   googleFacebookAuthorized: boolean;
 };
+
+export type NotificationChannel = "email" | "slack" | "sms";
+
+export type NotificationRule = {
+  id: string;
+  title: string;
+  description: string;
+  enabled: boolean;
+  channels: NotificationChannel[];
+};
+
+export type NotificationSettings = {
+  essential: NotificationRule[];
+  advanced: NotificationRule[];
+};

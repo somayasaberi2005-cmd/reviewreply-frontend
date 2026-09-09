@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1005,4 +1005,70 @@ export async function getAutoReplySettings(businessId: string): Promise<AutoRepl
 export async function updateAutoReplySettings(businessId: string, settings: AutoReplySettings): Promise<void> {
   await delay(400);
   mockAutoReplySettings = settings;
+}
+
+let mockNotificationSettings: NotificationSettings = {
+  essential: [
+    {
+      id: "n1",
+      title: "1st-Party Reviews",
+      description: "Manage your notifications for 1st-party reviews (customer feedback, testimonials).",
+      enabled: true,
+      channels: ["email"],
+    },
+    {
+      id: "n2",
+      title: "3rd-Party Reviews",
+      description: "Manage your notifications for new 3rd-party reviews on sites like Google, Facebook, etc.",
+      enabled: true,
+      channels: ["email"],
+    },
+    {
+      id: "n3",
+      title: "Suggested Reply",
+      description: "Enable AI-assisted response suggestions for 3rd-party reviews.",
+      enabled: false,
+      channels: [],
+    },
+  ],
+  advanced: [
+    {
+      id: "n4",
+      title: "Report Delivery",
+      description: "Manage who receives automatic reports via email. Select your report types and frequency.",
+      enabled: false,
+      channels: ["email"],
+    },
+    {
+      id: "n5",
+      title: "No Requests Sent Reminder",
+      description: "Get notified when this location has not sent any review requests on a weekly or monthly basis.",
+      enabled: true,
+      channels: ["email"],
+    },
+    {
+      id: "n6",
+      title: "Broken Authorization",
+      description: "Get notified when this location has lost connection to Google, Instagram, or Facebook.",
+      enabled: true,
+      channels: ["email", "slack"],
+    },
+  ],
+};
+
+export async function getNotificationSettings(businessId: string): Promise<NotificationSettings> {
+  await delay(400);
+  return mockNotificationSettings;
+}
+
+export async function updateNotificationRule(
+  businessId: string,
+  ruleId: string,
+  changes: Partial<Pick<NotificationRule, "enabled" | "channels">>
+): Promise<void> {
+  await delay(300);
+  const rule =
+    mockNotificationSettings.essential.find((r) => r.id === ruleId) ||
+    mockNotificationSettings.advanced.find((r) => r.id === ruleId);
+  if (rule) Object.assign(rule, changes);
 }
