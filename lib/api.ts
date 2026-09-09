@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -937,4 +937,72 @@ export async function updateConversionPopupSettings(
 
 export function getConversionPopupEmbedCode(businessId: string): string {
   return `<script src="https://app.yourdomain.com/popup/${businessId}.js"></script>`;
+}
+
+let mockAiReplyPrompts: AiReplyPrompts = {
+  customSmartReplyEnabled: false,
+  smartReplyPrompt: "Write a warm, professional reply that acknowledges the reviewer by name and references specific details from their review.",
+  customSuggestedReplyEnabled: false,
+  suggestedReplyPrompt: "Draft a suggested reply for approval, keeping the tone friendly and on-brand.",
+  customAutoReplyEnabled: false,
+  autoReplyPrompt: "Automatically draft and send a reply for positive reviews without requiring approval.",
+};
+
+export async function getAiReplyPrompts(businessId: string): Promise<AiReplyPrompts> {
+  await delay(300);
+  return mockAiReplyPrompts;
+}
+
+export async function updateAiReplyPrompts(businessId: string, prompts: AiReplyPrompts): Promise<void> {
+  await delay(400);
+  mockAiReplyPrompts = prompts;
+}
+
+let mockAutoTags: AutoTag[] = [];
+
+export async function getAutoTags(businessId: string): Promise<AutoTag[]> {
+  await delay(300);
+  return mockAutoTags;
+}
+
+export async function createAutoTag(
+  businessId: string,
+  name: string,
+  keywords: string[],
+  appliedToAllReviews: boolean
+): Promise<AutoTag> {
+  await delay(400);
+  const tag: AutoTag = {
+    id: `at${mockAutoTags.length + 1}`,
+    name,
+    keywords,
+    appliedToAllReviews,
+    reviewCount: 0,
+  };
+  mockAutoTags.push(tag);
+  return tag;
+}
+
+export async function deleteAutoTag(businessId: string, id: string): Promise<void> {
+  await delay(300);
+  mockAutoTags = mockAutoTags.filter((t) => t.id !== id);
+}
+
+let mockAutoReplySettings: AutoReplySettings = {
+  enabled: false,
+  reviewType: "both",
+  ratingThresholds: { fiveStar: true, fourStar: true, facebookRecommend: true },
+  generationMethod: "ai_writes",
+  replyToReviewsWithoutText: true,
+  googleFacebookAuthorized: false,
+};
+
+export async function getAutoReplySettings(businessId: string): Promise<AutoReplySettings> {
+  await delay(300);
+  return mockAutoReplySettings;
+}
+
+export async function updateAutoReplySettings(businessId: string, settings: AutoReplySettings): Promise<void> {
+  await delay(400);
+  mockAutoReplySettings = settings;
 }

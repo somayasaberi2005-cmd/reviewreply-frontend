@@ -332,3 +332,32 @@ export type ConversionPopupSettings = {
   showOnMobile: boolean;
   desktopPosition: PopupPosition;
 };
+
+export type AiReplyPrompts = {
+  customSmartReplyEnabled: boolean;
+  smartReplyPrompt: string;
+  customSuggestedReplyEnabled: boolean;
+  suggestedReplyPrompt: string;
+  customAutoReplyEnabled: boolean;
+  autoReplyPrompt: string;
+};
+
+export type AutoTag = {
+  id: string;
+  name: string;
+  keywords: string[];
+  appliedToAllReviews: boolean;
+  reviewCount: number;
+};
+
+export type AutoReplyReviewType = "first_party" | "third_party" | "both";
+export type AutoReplyGenerationMethod = "ai_writes" | "template_library";
+
+export type AutoReplySettings = {
+  enabled: boolean;
+  reviewType: AutoReplyReviewType;
+  ratingThresholds: { fiveStar: boolean; fourStar: boolean; facebookRecommend: boolean };
+  generationMethod: AutoReplyGenerationMethod;
+  replyToReviewsWithoutText: boolean;
+  googleFacebookAuthorized: boolean;
+};
