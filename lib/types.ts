@@ -394,3 +394,24 @@ export type ReviewSiteLink = {
   monitorReviews: boolean;
   order: number;
 };
+
+export type SendMethod = "email" | "sms" | "both";
+export type RatingType = "nps" | "star" | "thumbs";
+export type RatingOrder = "low_to_high" | "high_to_low";
+
+export type FeedbackSettings = {
+  replyToEmail: string;
+  useCustomReplyEmail: boolean;
+  repeatFeedbackThresholdEnabled: boolean;
+  repeatFeedbackThresholdDays: number;
+  defaultSendMethod: SendMethod;
+  ratingType: RatingType;
+  ratingOrder: RatingOrder;
+  positiveFeedbackThreshold: number;
+  smartAutoDirect: boolean;
+  permissionToPostReview: boolean;
+  askMobilePhone: boolean;
+  askJobId: boolean;
+  showBusinessAddressPhone: boolean;
+  feedbackUrl: string;
+};
