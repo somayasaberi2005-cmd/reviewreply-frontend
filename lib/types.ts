@@ -280,3 +280,55 @@ export type QaEntry = {
 export type CompetitorReportStatus = {
   enabled: boolean;
 };
+
+export type WidgetLayout = "vertical" | "horizontal" | "full_page" | "data_only";
+
+export type ReviewWidgetSettings = {
+  layout: WidgetLayout;
+  showRatingSummary: boolean;
+  showIndividualReviews: boolean;
+  minRatingToShow: number;
+  active: boolean;
+};
+
+export type TagWidget = {
+  id: string;
+  name: string;
+  tags: string[];
+  createdAt: string;
+};
+
+export type BadgeLayout = "clean" | "modern" | "minimal";
+export type LinkTarget = "new_tab" | "same_tab";
+
+export type ReviewBadgeSettings = {
+  layout: BadgeLayout;
+  linkTarget: LinkTarget;
+};
+
+export type SocialPlatform = "facebook" | "instagram" | "google_posts";
+
+export type SocialAccountStatus = {
+  platform: SocialPlatform;
+  connected: boolean;
+};
+
+export type SocialSharingSettings = {
+  accounts: SocialAccountStatus[];
+  automationEnabled: boolean;
+  defaultContent: string;
+};
+
+export type UrlMatchType = "exact" | "partial";
+export type PopupPosition = "left" | "right";
+
+export type ConversionPopupSettings = {
+  enabled: boolean;
+  targetUrls: string;
+  urlMatchType: UrlMatchType;
+  clickThroughUrl: string;
+  showFirstParty: boolean;
+  showThirdParty: boolean;
+  showOnMobile: boolean;
+  desktopPosition: PopupPosition;
+};

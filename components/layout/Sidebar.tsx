@@ -15,6 +15,7 @@ import {
   Users2,
   Send,
   Plug,
+  Upload,
 } from "lucide-react";
 import { useBusinessContext } from "@/lib/business-context";
 import { getPendingCountsByBusiness } from "@/lib/api";
@@ -61,6 +62,7 @@ const navGroups = [
           { name: "Competitor Report", href: "/reports/competitor" },
         ],
       },
+      { name: "Publish", href: "/publish", icon: Upload, children: [{ name: "Review Widget", href: "/publish/review-widget" }] },
       { name: "Settings", href: "/settings", icon: Settings },
       { name: "Audit Log", href: "/audit-log", icon: FileClock },
       { name: "Team", href: "/team", icon: Users },
@@ -229,3 +231,9 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     </aside>
   );
 }
+
+
+
+
+
+

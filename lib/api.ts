@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -818,4 +818,123 @@ export async function getCompetitorReportStatus(businessId: string): Promise<Com
 export async function enableCompetitorReport(businessId: string): Promise<void> {
   await delay(600);
   mockCompetitorReportStatus = { enabled: true };
+}
+
+let mockReviewWidget: ReviewWidgetSettings = {
+  layout: "vertical",
+  showRatingSummary: true,
+  showIndividualReviews: true,
+  minRatingToShow: 4,
+  active: false,
+};
+
+export async function getReviewWidgetSettings(businessId: string): Promise<ReviewWidgetSettings> {
+  await delay(300);
+  return mockReviewWidget;
+}
+
+export async function updateReviewWidgetSettings(
+  businessId: string,
+  settings: ReviewWidgetSettings
+): Promise<void> {
+  await delay(400);
+  mockReviewWidget = settings;
+}
+
+export function getReviewWidgetEmbedCode(businessId: string, layout: WidgetLayout): string {
+  return `<script src="https://app.yourdomain.com/widget/${businessId}.js" data-layout="${layout}"></script>`;
+}
+
+let mockTagWidgets: TagWidget[] = [];
+
+export async function getTagWidgets(businessId: string): Promise<TagWidget[]> {
+  await delay(300);
+  return mockTagWidgets;
+}
+
+export async function createTagWidget(businessId: string, name: string, tags: string[]): Promise<TagWidget> {
+  await delay(400);
+  const widget: TagWidget = {
+    id: `tw${mockTagWidgets.length + 1}`,
+    name,
+    tags,
+    createdAt: new Date().toISOString(),
+  };
+  mockTagWidgets.push(widget);
+  return widget;
+}
+
+export async function deleteTagWidget(businessId: string, id: string): Promise<void> {
+  await delay(300);
+  mockTagWidgets = mockTagWidgets.filter((w) => w.id !== id);
+}
+
+let mockReviewBadge: ReviewBadgeSettings = { layout: "modern", linkTarget: "new_tab" };
+
+export async function getReviewBadgeSettings(businessId: string): Promise<ReviewBadgeSettings> {
+  await delay(300);
+  return mockReviewBadge;
+}
+
+export async function updateReviewBadgeSettings(
+  businessId: string,
+  settings: ReviewBadgeSettings
+): Promise<void> {
+  await delay(400);
+  mockReviewBadge = settings;
+}
+
+export function getReviewBadgeEmbedCode(businessId: string): string {
+  return `<script src="https://app.yourdomain.com/badge/${businessId}.js"></script>`;
+}
+
+let mockSocialSharing: SocialSharingSettings = {
+  accounts: [
+    { platform: "facebook", connected: false },
+    { platform: "instagram", connected: false },
+    { platform: "google_posts", connected: false },
+  ],
+  automationEnabled: false,
+  defaultContent: "Another great review from one of our customers...",
+};
+
+export async function getSocialSharingSettings(businessId: string): Promise<SocialSharingSettings> {
+  await delay(300);
+  return mockSocialSharing;
+}
+
+export async function updateSocialSharingSettings(
+  businessId: string,
+  settings: SocialSharingSettings
+): Promise<void> {
+  await delay(400);
+  mockSocialSharing = settings;
+}
+
+let mockConversionPopup: ConversionPopupSettings = {
+  enabled: true,
+  targetUrls: "",
+  urlMatchType: "exact",
+  clickThroughUrl: "",
+  showFirstParty: true,
+  showThirdParty: true,
+  showOnMobile: true,
+  desktopPosition: "left",
+};
+
+export async function getConversionPopupSettings(businessId: string): Promise<ConversionPopupSettings> {
+  await delay(300);
+  return mockConversionPopup;
+}
+
+export async function updateConversionPopupSettings(
+  businessId: string,
+  settings: ConversionPopupSettings
+): Promise<void> {
+  await delay(400);
+  mockConversionPopup = settings;
+}
+
+export function getConversionPopupEmbedCode(businessId: string): string {
+  return `<script src="https://app.yourdomain.com/popup/${businessId}.js"></script>`;
 }
