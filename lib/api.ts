@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink, SendMethod, RatingType, RatingOrder, FeedbackSettings } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink, SendMethod, RatingType, RatingOrder, FeedbackSettings, VerificationStatus, TollFreeDetails, BusinessDetailsInfo, BusinessOwnerDetails } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1172,4 +1172,67 @@ export async function getFeedbackSettings(businessId: string): Promise<FeedbackS
 export async function updateFeedbackSettings(businessId: string, settings: FeedbackSettings): Promise<void> {
   await delay(400);
   mockFeedbackSettings = settings;
+}
+
+let mockTollFree: TollFreeDetails = {
+  legalBusinessName: "",
+  doingBusinessAs: "",
+  businessType: "",
+  registrationNumber: "",
+  status: "not_requested",
+};
+
+let mockBusinessDetails: BusinessDetailsInfo = {
+  businessName: "Roshan",
+  websiteUrl: "",
+  streetAddress: "",
+  businessType: "",
+  city: "",
+  state: "",
+  zip: "",
+  country: "United States",
+  phoneNumber: "",
+  timeZone: "Pacific/Honolulu",
+  language: "English",
+};
+
+let mockBusinessOwner: BusinessOwnerDetails = {
+  firstName: "",
+  lastName: "",
+  email: "",
+};
+
+export async function getTollFreeDetails(businessId: string): Promise<TollFreeDetails> {
+  await delay(300);
+  return mockTollFree;
+}
+
+export async function updateTollFreeDetails(businessId: string, details: TollFreeDetails): Promise<void> {
+  await delay(400);
+  mockTollFree = details;
+}
+
+export async function submitTollFreeVerification(businessId: string): Promise<void> {
+  await delay(600);
+  mockTollFree.status = "pending";
+}
+
+export async function getBusinessDetailsInfo(businessId: string): Promise<BusinessDetailsInfo> {
+  await delay(300);
+  return mockBusinessDetails;
+}
+
+export async function updateBusinessDetailsInfo(businessId: string, info: BusinessDetailsInfo): Promise<void> {
+  await delay(400);
+  mockBusinessDetails = info;
+}
+
+export async function getBusinessOwnerDetails(businessId: string): Promise<BusinessOwnerDetails> {
+  await delay(300);
+  return mockBusinessOwner;
+}
+
+export async function updateBusinessOwnerDetails(businessId: string, owner: BusinessOwnerDetails): Promise<void> {
+  await delay(400);
+  mockBusinessOwner = owner;
 }

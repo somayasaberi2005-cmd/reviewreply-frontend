@@ -415,3 +415,33 @@ export type FeedbackSettings = {
   showBusinessAddressPhone: boolean;
   feedbackUrl: string;
 };
+
+export type VerificationStatus = "not_requested" | "pending" | "verified";
+
+export type TollFreeDetails = {
+  legalBusinessName: string;
+  doingBusinessAs: string;
+  businessType: string;
+  registrationNumber: string;
+  status: VerificationStatus;
+};
+
+export type BusinessDetailsInfo = {
+  businessName: string;
+  websiteUrl: string;
+  streetAddress: string;
+  businessType: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  phoneNumber: string;
+  timeZone: string;
+  language: string;
+};
+
+export type BusinessOwnerDetails = {
+  firstName: string;
+  lastName: string;
+  email: string;
+};
