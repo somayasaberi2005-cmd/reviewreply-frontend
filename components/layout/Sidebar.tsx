@@ -16,6 +16,7 @@ import {
   Send,
   Plug,
   Upload,
+  LayoutGrid,
 } from "lucide-react";
 import { useBusinessContext } from "@/lib/business-context";
 import { getPendingCountsByBusiness } from "@/lib/api";
@@ -62,9 +63,11 @@ const navGroups = [
           { name: "Competitor Report", href: "/reports/competitor" },
         ],
       },
-      { name: "Publish", href: "/publish", icon: Upload, children: [{ name: "Review Widget", href: "/publish/review-widget" }] },
+      { name: "Publish", href: "/publish", icon: Upload,
+  LayoutGrid, children: [{ name: "Review Widget", href: "/publish/review-widget" }] },
       { name: "Settings", href: "/settings", icon: Settings, children: [{ name: "AI Reply Prompts", href: "/settings/ai-reply-prompts" }, { name: "Auto-Tagging", href: "/settings/auto-tagging" }, { name: "Auto-Replies", href: "/settings/auto-replies" }, { name: "Notifications", href: "/settings/notifications" }, { name: "Brand & Colors", href: "/settings/brand-colors" }, { name: "Online Review Links", href: "/settings/online-review-links" }, { name: "Feedback Settings", href: "/settings/feedback-settings" }, { name: "Business Details", href: "/settings/business-details" }] },
       { name: "Audit Log", href: "/audit-log", icon: FileClock },
+      { name: "Listings Hub", href: "/listings-hub", icon: LayoutGrid },
       { name: "Team", href: "/team", icon: Users },
       { name: "Competitors", href: "/competitors", icon: Users2 },
     ],
@@ -231,6 +234,8 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     </aside>
   );
 }
+
+
 
 
 

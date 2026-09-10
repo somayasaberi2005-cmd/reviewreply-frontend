@@ -445,3 +445,15 @@ export type BusinessOwnerDetails = {
   lastName: string;
   email: string;
 };
+
+export type ListingSyncStatus = {
+  platform: "facebook" | "google" | "instagram";
+  synced: boolean;
+};
+
+export type ListingsHubSummary = {
+  totalListings: number;
+  syncedCount: number;
+  updatedCount: number;
+  platforms: ListingSyncStatus[];
+};
