@@ -457,3 +457,10 @@ export type ListingsHubSummary = {
   updatedCount: number;
   platforms: ListingSyncStatus[];
 };
+
+export type ReviewDefenseSummary = {
+  totalLifetimeReviews: { active: number; suspicious: number; inDispute: number; removed: number };
+  suspectedAiPercent: number;
+  legitimateImpressions: number;
+  suspiciousImpressions: number;
+};
