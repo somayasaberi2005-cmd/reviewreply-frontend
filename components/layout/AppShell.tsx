@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
@@ -7,6 +7,7 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { TopbarSearch } from "@/components/layout/TopbarSearch";
 import { NotificationBell } from "@/components/layout/NotificationBell";
 import { UserMenu } from "@/components/layout/UserMenu";
+import { HelpMenu } from "@/components/layout/HelpMenu";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -43,6 +44,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4 ml-auto">
+            <HelpMenu />
             <NotificationBell />
             <UserMenu />
           </div>

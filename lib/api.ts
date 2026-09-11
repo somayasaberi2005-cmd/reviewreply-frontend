@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink, SendMethod, RatingType, RatingOrder, FeedbackSettings, VerificationStatus, TollFreeDetails, BusinessDetailsInfo, BusinessOwnerDetails, ListingSyncStatus, ListingsHubSummary, ReviewDefenseSummary, BusinessTrend, AgencyBusinessRow, LocationDashboardSummary, ActivityType, CustomerActivityEntry } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink, SendMethod, RatingType, RatingOrder, FeedbackSettings, VerificationStatus, TollFreeDetails, BusinessDetailsInfo, BusinessOwnerDetails, ListingSyncStatus, ListingsHubSummary, ReviewDefenseSummary, BusinessTrend, AgencyBusinessRow, LocationDashboardSummary, ActivityType, CustomerActivityEntry, DefaultConfiguration, ImportBusinessSummary, AgencyUserStatus, AgencyUser, MyProfile } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1368,4 +1368,73 @@ export async function getCustomerActivity(businessId: string): Promise<CustomerA
       date: "2026-09-03T08:20:00Z",
     },
   ];
+}
+
+let mockDefaultConfig: DefaultConfiguration = {
+  autoReplyEnabledByDefault: false,
+  defaultRatingType: "nps",
+  defaultSendMethod: "both",
+  requireConsentCheckbox: true,
+};
+
+export async function getDefaultConfiguration(): Promise<DefaultConfiguration> {
+  await delay(300);
+  return mockDefaultConfig;
+}
+
+export async function updateDefaultConfiguration(config: DefaultConfiguration): Promise<void> {
+  await delay(400);
+  mockDefaultConfig = config;
+}
+
+export async function importBusinessesFile(file: File): Promise<ImportBusinessSummary> {
+  await delay(1200);
+  return { totalRows: 12, imported: 11, skipped: 1 };
+}
+
+let mockAgencyUsers: AgencyUser[] = [
+  { id: "au1", name: "Somaya Sahar", email: "somaya@roshan.af", role: "owner", businesses: ["All"], status: "active" },
+  { id: "au2", name: "Farida Nasiri", email: "farida@roshan.af", role: "regional_manager", businesses: ["Roshan - Downtown"], status: "active" },
+  { id: "au3", name: "Hamid Yousafi", email: "hamid@roshan.af", role: "location_manager", businesses: ["Roshan - Westside"], status: "invited" },
+];
+
+export async function getAgencyUsers(): Promise<AgencyUser[]> {
+  await delay(400);
+  return mockAgencyUsers;
+}
+
+export async function inviteAgencyUser(email: string, role: UserRole): Promise<AgencyUser> {
+  await delay(500);
+  const user: AgencyUser = {
+    id: `au${mockAgencyUsers.length + 1}`,
+    name: email.split("@")[0],
+    email,
+    role,
+    businesses: [],
+    status: "invited",
+  };
+  mockAgencyUsers.push(user);
+  return user;
+}
+
+export async function removeAgencyUser(id: string): Promise<void> {
+  await delay(300);
+  mockAgencyUsers = mockAgencyUsers.filter((u) => u.id !== id);
+}
+
+let mockMyProfile: MyProfile = {
+  firstName: "Somaya",
+  lastName: "Sahar",
+  email: "somaya@roshan.af",
+  phone: "",
+};
+
+export async function getMyProfile(): Promise<MyProfile> {
+  await delay(300);
+  return mockMyProfile;
+}
+
+export async function updateMyProfile(profile: MyProfile): Promise<void> {
+  await delay(400);
+  mockMyProfile = profile;
 }

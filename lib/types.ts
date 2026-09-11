@@ -500,3 +500,34 @@ export type CustomerActivityEntry = {
   rating: number | null;
   date: string;
 };
+
+export type DefaultConfiguration = {
+  autoReplyEnabledByDefault: boolean;
+  defaultRatingType: RatingType;
+  defaultSendMethod: SendMethod;
+  requireConsentCheckbox: boolean;
+};
+
+export type ImportBusinessSummary = {
+  totalRows: number;
+  imported: number;
+  skipped: number;
+};
+
+export type AgencyUserStatus = "active" | "invited";
+
+export type AgencyUser = {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  businesses: string[];
+  status: AgencyUserStatus;
+};
+
+export type MyProfile = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+};
