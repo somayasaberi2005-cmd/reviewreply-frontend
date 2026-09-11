@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink, SendMethod, RatingType, RatingOrder, FeedbackSettings, VerificationStatus, TollFreeDetails, BusinessDetailsInfo, BusinessOwnerDetails, ListingSyncStatus, ListingsHubSummary, ReviewDefenseSummary } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink, SendMethod, RatingType, RatingOrder, FeedbackSettings, VerificationStatus, TollFreeDetails, BusinessDetailsInfo, BusinessOwnerDetails, ListingSyncStatus, ListingsHubSummary, ReviewDefenseSummary, BusinessTrend, AgencyBusinessRow } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1263,4 +1263,52 @@ export async function getReviewDefenseSummary(businessId: string): Promise<Revie
 
 export async function auditBusinessForSuspiciousReviews(businessId: string): Promise<void> {
   await delay(1200);
+}
+
+export async function getAgencyBusinesses(): Promise<AgencyBusinessRow[]> {
+  await delay(400);
+  return [
+    {
+      id: "b1",
+      name: "Roshan",
+      location: "Kabul, Afghanistan, Kabul, AL",
+      shortName: "roshan",
+      managers: [],
+      rating: null,
+      requestsSent: 0,
+      openRate: 0,
+      requestsReceived: 0,
+      reviewClicks: 0,
+      totalOnlineReviews: 0,
+      trend: "same",
+    },
+    {
+      id: "b2",
+      name: "Roshan - Downtown",
+      location: "Kabul, Afghanistan, Kabul, AL",
+      shortName: "roshan-dt",
+      managers: ["Farida Nasiri"],
+      rating: 4.3,
+      requestsSent: 96,
+      openRate: 57.3,
+      requestsReceived: 31,
+      reviewClicks: 18,
+      totalOnlineReviews: 12,
+      trend: "up",
+    },
+    {
+      id: "b3",
+      name: "Roshan - Westside",
+      location: "Kabul, Afghanistan, Kabul, AL",
+      shortName: "roshan-ws",
+      managers: ["Hamid Yousafi"],
+      rating: 4.8,
+      requestsSent: 74,
+      openRate: 68.9,
+      requestsReceived: 29,
+      reviewClicks: 20,
+      totalOnlineReviews: 15,
+      trend: "down",
+    },
+  ];
 }

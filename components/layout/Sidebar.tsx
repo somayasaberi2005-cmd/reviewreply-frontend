@@ -27,6 +27,7 @@ const navGroups = [
     label: "Overview",
     items: [
       { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+      { name: "Business Dashboard", href: "/business-dashboard", icon: Building2 },
       { name: "Reviews", href: "/reviews", icon: MessageSquareText },
       {
         name: "Requests",
@@ -237,6 +238,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     </aside>
   );
 }
+
 
 
 

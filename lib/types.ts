@@ -464,3 +464,20 @@ export type ReviewDefenseSummary = {
   legitimateImpressions: number;
   suspiciousImpressions: number;
 };
+
+export type BusinessTrend = "up" | "down" | "same";
+
+export type AgencyBusinessRow = {
+  id: string;
+  name: string;
+  location: string;
+  shortName: string;
+  managers: string[];
+  rating: number | null;
+  requestsSent: number;
+  openRate: number;
+  requestsReceived: number;
+  reviewClicks: number;
+  totalOnlineReviews: number;
+  trend: BusinessTrend;
+};
