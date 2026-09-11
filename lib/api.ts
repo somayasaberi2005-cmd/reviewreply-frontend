@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink, SendMethod, RatingType, RatingOrder, FeedbackSettings, VerificationStatus, TollFreeDetails, BusinessDetailsInfo, BusinessOwnerDetails, ListingSyncStatus, ListingsHubSummary, ReviewDefenseSummary, BusinessTrend, AgencyBusinessRow, LocationDashboardSummary } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink, SendMethod, RatingType, RatingOrder, FeedbackSettings, VerificationStatus, TollFreeDetails, BusinessDetailsInfo, BusinessOwnerDetails, ListingSyncStatus, ListingsHubSummary, ReviewDefenseSummary, BusinessTrend, AgencyBusinessRow, LocationDashboardSummary, ActivityType, CustomerActivityEntry } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1322,4 +1322,50 @@ export async function getLocationDashboardSummary(businessId: string): Promise<L
     repliesAwaiting: 3,
     smartInsightsEnabled: false,
   };
+}
+
+export async function getCustomerActivity(businessId: string): Promise<CustomerActivityEntry[]> {
+  await delay(400);
+  return [
+    {
+      id: "ca1",
+      customerName: "Sadaf Ahmadi",
+      type: "review_posted",
+      detail: "Left a 5-star review on Google",
+      rating: 5,
+      date: "2026-08-20T14:30:00Z",
+    },
+    {
+      id: "ca2",
+      customerName: "Ali Rahimi",
+      type: "feedback_received",
+      detail: "Submitted private feedback (2 stars)",
+      rating: 2,
+      date: "2026-08-25T09:12:00Z",
+    },
+    {
+      id: "ca3",
+      customerName: "Nadia Kabiri",
+      type: "request_sent",
+      detail: "Review request sent via Email",
+      rating: null,
+      date: "2026-08-27T11:00:00Z",
+    },
+    {
+      id: "ca4",
+      customerName: "Omar Sultani",
+      type: "reminder_sent",
+      detail: "First rating reminder sent via SMS",
+      rating: null,
+      date: "2026-08-29T16:45:00Z",
+    },
+    {
+      id: "ca5",
+      customerName: "Latifa Noori",
+      type: "review_posted",
+      detail: "Left a 3-star review on Facebook",
+      rating: 3,
+      date: "2026-09-03T08:20:00Z",
+    },
+  ];
 }

@@ -489,3 +489,14 @@ export type LocationDashboardSummary = {
   repliesAwaiting: number;
   smartInsightsEnabled: boolean;
 };
+
+export type ActivityType = "request_sent" | "feedback_received" | "review_posted" | "reminder_sent";
+
+export type CustomerActivityEntry = {
+  id: string;
+  customerName: string;
+  type: ActivityType;
+  detail: string;
+  rating: number | null;
+  date: string;
+};
