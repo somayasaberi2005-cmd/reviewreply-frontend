@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink, SendMethod, RatingType, RatingOrder, FeedbackSettings, VerificationStatus, TollFreeDetails, BusinessDetailsInfo, BusinessOwnerDetails, ListingSyncStatus, ListingsHubSummary, ReviewDefenseSummary, BusinessTrend, AgencyBusinessRow, LocationDashboardSummary, ActivityType, CustomerActivityEntry, DefaultConfiguration, ImportBusinessSummary, AgencyUserStatus, AgencyUser, MyProfile } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink, SendMethod, RatingType, RatingOrder, FeedbackSettings, VerificationStatus, TollFreeDetails, BusinessDetailsInfo, BusinessOwnerDetails, ListingSyncStatus, ListingsHubSummary, ReviewDefenseSummary, BusinessTrend, AgencyBusinessRow, LocationDashboardSummary, ActivityType, CustomerActivityEntry, DefaultConfiguration, ImportBusinessSummary, AgencyUserStatus, AgencyUser, MyProfile, AuthProvider, AuthorizationEntry, ApiCredential, PaymentInfo, AiSettings, AddonId, Addon } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1437,4 +1437,102 @@ export async function getMyProfile(): Promise<MyProfile> {
 export async function updateMyProfile(profile: MyProfile): Promise<void> {
   await delay(400);
   mockMyProfile = profile;
+}
+
+let mockAuthorizations: AuthorizationEntry[] = [
+  { provider: "google", connected: false, accountEmail: null },
+  { provider: "facebook", connected: false, accountEmail: null },
+  { provider: "instagram", connected: false, accountEmail: null },
+];
+
+export async function getAuthorizations(): Promise<AuthorizationEntry[]> {
+  await delay(300);
+  return mockAuthorizations;
+}
+
+export async function toggleAuthorization(provider: AuthProvider, connected: boolean): Promise<void> {
+  await delay(500);
+  const entry = mockAuthorizations.find((a) => a.provider === provider);
+  if (entry) {
+    entry.connected = connected;
+    entry.accountEmail = connected ? "you@roshan.af" : null;
+  }
+}
+
+let mockApiCredentials: ApiCredential[] = [];
+
+export async function getApiCredentials(): Promise<ApiCredential[]> {
+  await delay(300);
+  return mockApiCredentials;
+}
+
+export async function createApiCredential(name: string): Promise<ApiCredential> {
+  await delay(500);
+  const key = Array.from({ length: 24 }, () => "abcdef0123456789"[Math.floor(Math.random() * 16)]).join("");
+  const credential: ApiCredential = {
+    id: `key${mockApiCredentials.length + 1}`,
+    name,
+    keyPreview: `sk_live_...${key.slice(-4)}`,
+    createdAt: new Date().toISOString(),
+    lastUsed: null,
+  };
+  mockApiCredentials.push(credential);
+  return credential;
+}
+
+export async function revokeApiCredential(id: string): Promise<void> {
+  await delay(300);
+  mockApiCredentials = mockApiCredentials.filter((c) => c.id !== id);
+}
+
+let mockPaymentInfo: PaymentInfo = {
+  cardBrand: null,
+  last4: null,
+  expiryMonth: null,
+  expiryYear: null,
+  billingEmail: "",
+};
+
+export async function getPaymentInfo(): Promise<PaymentInfo> {
+  await delay(300);
+  return mockPaymentInfo;
+}
+
+export async function updatePaymentInfo(info: PaymentInfo): Promise<void> {
+  await delay(500);
+  mockPaymentInfo = info;
+}
+
+let mockAiSettings: AiSettings = {
+  aiRepliesEnabled: true,
+  tone: "friendly",
+  maxReplyLength: 400,
+  useEmoji: false,
+};
+
+export async function getAiSettings(): Promise<AiSettings> {
+  await delay(300);
+  return mockAiSettings;
+}
+
+export async function updateAiSettings(settings: AiSettings): Promise<void> {
+  await delay(400);
+  mockAiSettings = settings;
+}
+
+let mockAddons: Addon[] = [
+  { id: "sms_credits", name: "SMS Credit Pack", description: "500 additional SMS credits per month.", price: "$15/mo", active: false },
+  { id: "extra_locations", name: "Extra Locations", description: "Add up to 5 more business locations.", price: "$40/mo", active: false },
+  { id: "white_label", name: "White Label Branding", description: "Remove ReviewReply branding from customer-facing pages.", price: "$60/mo", active: false },
+];
+
+export async function getAddons(): Promise<Addon[]> {
+  await delay(300);
+  return mockAddons;
+}
+
+export async function toggleAddon(id: AddonId): Promise<void> {
+  await delay(500);
+  const addon = mockAddons.find((a) => a.id === id);
+  if (addon) addon.active = !addon.active;
 }

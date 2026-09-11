@@ -531,3 +531,44 @@ export type MyProfile = {
   email: string;
   phone: string;
 };
+
+export type AuthProvider = "google" | "facebook" | "instagram";
+
+export type AuthorizationEntry = {
+  provider: AuthProvider;
+  connected: boolean;
+  accountEmail: string | null;
+};
+
+export type ApiCredential = {
+  id: string;
+  name: string;
+  keyPreview: string;
+  createdAt: string;
+  lastUsed: string | null;
+};
+
+export type PaymentInfo = {
+  cardBrand: string | null;
+  last4: string | null;
+  expiryMonth: number | null;
+  expiryYear: number | null;
+  billingEmail: string;
+};
+
+export type AiSettings = {
+  aiRepliesEnabled: boolean;
+  tone: "friendly" | "professional" | "casual";
+  maxReplyLength: number;
+  useEmoji: boolean;
+};
+
+export type AddonId = "sms_credits" | "extra_locations" | "white_label";
+
+export type Addon = {
+  id: AddonId;
+  name: string;
+  description: string;
+  price: string;
+  active: boolean;
+};
