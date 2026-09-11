@@ -481,3 +481,11 @@ export type AgencyBusinessRow = {
   totalOnlineReviews: number;
   trend: BusinessTrend;
 };
+
+export type LocationDashboardSummary = {
+  userName: string;
+  progressPercent: number;
+  requestsSentLast30Days: number;
+  repliesAwaiting: number;
+  smartInsightsEnabled: boolean;
+};

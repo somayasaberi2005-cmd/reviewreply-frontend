@@ -18,6 +18,7 @@ import {
   Upload,
   LayoutGrid,
   ShieldCheck,
+  MapPin,
 } from "lucide-react";
 import { useBusinessContext } from "@/lib/business-context";
 import { getPendingCountsByBusiness } from "@/lib/api";
@@ -28,6 +29,7 @@ const navGroups = [
     items: [
       { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
       { name: "Business Dashboard", href: "/business-dashboard", icon: Building2 },
+      { name: "Location Dashboard", href: "/location-dashboard", icon: MapPin },
       { name: "Reviews", href: "/reviews", icon: MessageSquareText },
       {
         name: "Requests",
@@ -67,7 +69,8 @@ const navGroups = [
       },
       { name: "Publish", href: "/publish", icon: Upload,
   LayoutGrid,
-  ShieldCheck, children: [{ name: "Review Widget", href: "/publish/review-widget" }] },
+  ShieldCheck,
+  MapPin, children: [{ name: "Review Widget", href: "/publish/review-widget" }] },
       { name: "Settings", href: "/settings", icon: Settings, children: [{ name: "AI Reply Prompts", href: "/settings/ai-reply-prompts" }, { name: "Auto-Tagging", href: "/settings/auto-tagging" }, { name: "Auto-Replies", href: "/settings/auto-replies" }, { name: "Notifications", href: "/settings/notifications" }, { name: "Brand & Colors", href: "/settings/brand-colors" }, { name: "Online Review Links", href: "/settings/online-review-links" }, { name: "Feedback Settings", href: "/settings/feedback-settings" }, { name: "Business Details", href: "/settings/business-details" }] },
       { name: "Audit Log", href: "/audit-log", icon: FileClock },
       { name: "Listings Hub", href: "/listings-hub", icon: LayoutGrid },
@@ -238,6 +241,8 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     </aside>
   );
 }
+
+
 
 
 
