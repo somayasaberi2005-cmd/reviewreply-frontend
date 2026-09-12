@@ -3,9 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { getAgencyBusinesses } from "@/lib/api";
 import { AgencyBusinessRow } from "@/lib/types";
+import { useToast } from "@/lib/toast-context";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Tag, Search, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Plus, Tag, Search, TrendingUp, TrendingDown, Minus, X } from "lucide-react";
 
 function TrendDot({ trend }: { trend: AgencyBusinessRow["trend"] }) {
   if (trend === "up") return <TrendingUp size={12} className="text-green-600" />;
@@ -14,11 +15,17 @@ function TrendDot({ trend }: { trend: AgencyBusinessRow["trend"] }) {
 }
 
 export default function BusinessDashboardPage() {
+  const { showToast } = useToast();
   const [rows, setRows] = useState<AgencyBusinessRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [pageSize, setPageSize] = useState(25);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showLabelMenu, setShowLabelMenu] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newCity, setNewCity] = useState("");
+  const [newState, setNewState] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -35,6 +42,36 @@ export default function BusinessDashboardPage() {
 
   function toggleSelect(id: string) {
     setSelectedIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
+  }
+
+  function handleAddBusiness() {
+    if (!newName.trim()) return;
+    const newRow: AgencyBusinessRow = {
+      id: `b${rows.length + 1}`,
+      name: newName.trim(),
+      location: `${newCity}, ${newState}`.replace(/^, |, $/g, ""),
+      shortName: newName.trim().toLowerCase().replace(/\s+/g, "-"),
+      managers: [],
+      rating: null,
+      requestsSent: 0,
+      openRate: 0,
+      requestsReceived: 0,
+      reviewClicks: 0,
+      totalOnlineReviews: 0,
+      trend: "same",
+    };
+    setRows((prev) => [...prev, newRow]);
+    setNewName("");
+    setNewCity("");
+    setNewState("");
+    setShowAddModal(false);
+    showToast("Business added");
+  }
+
+  function applyLabel(label: string) {
+    showToast(`"${label}" label applied to ${selectedIds.length} business${selectedIds.length !== 1 ? "es" : ""}`);
+    setShowLabelMenu(false);
+    setSelectedIds([]);
   }
 
   function exportCsv() {
@@ -62,13 +99,31 @@ export default function BusinessDashboardPage() {
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-        <div className="flex gap-2">
-          <Button size="sm">
+        <div className="flex gap-2 relative">
+          <Button size="sm" onClick={() => setShowAddModal(true)}>
             <Plus size={14} /> Add business
           </Button>
-          <Button size="sm" variant="outline">
-            <Tag size={14} /> label
-          </Button>
+          <div className="relative">
+            <Button size="sm" variant="outline" onClick={() => setShowLabelMenu((prev) => !prev)} disabled={selectedIds.length === 0}>
+              <Tag size={14} /> label
+            </Button>
+            {showLabelMenu && (
+              <div className="absolute left-0 top-full mt-1 w-44 bg-white border border-border rounded-lg shadow-sm py-1 z-10">
+                {["VIP", "Needs Attention", "New Location"].map((label) => (
+                  <button
+                    key={label}
+                    onClick={() => applyLabel(label)}
+                    className="w-full text-left text-sm px-3 py-2 hover:bg-slate-50"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          {selectedIds.length > 0 && (
+            <span className="text-xs text-slate-500 self-center">{selectedIds.length} selected</span>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium text-slate-700">Reporting Time Period</label>
@@ -102,7 +157,14 @@ export default function BusinessDashboardPage() {
                 <thead>
                   <tr className="border-b border-border text-left text-xs text-slate-500">
                     <th className="py-2 pr-3">
-                      <input type="checkbox" className="rounded border-border" />
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.length === filtered.length && filtered.length > 0}
+                        onChange={() =>
+                          setSelectedIds(selectedIds.length === filtered.length ? [] : filtered.map((r) => r.id))
+                        }
+                        className="rounded border-border"
+                      />
                     </th>
                     <th className="py-2 pr-4">Business Name</th>
                     <th className="py-2 pr-4">Short Name</th>
@@ -176,6 +238,54 @@ export default function BusinessDashboardPage() {
             <p><span className="font-medium">Black</span> means same as last score</p>
           </div>
         </>
+      )}
+
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 px-4">
+          <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
+            <div className="flex items-center justify-between mb-4">
+              <p className="font-semibold text-slate-900">Add Business</p>
+              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-slate-600">
+                <X size={18} />
+              </button>
+            </div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Business Name</label>
+            <input
+              type="text"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              className="w-full text-sm border border-border rounded-md px-3 py-2 mb-3"
+            />
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">City</label>
+                <input
+                  type="text"
+                  value={newCity}
+                  onChange={(e) => setNewCity(e.target.value)}
+                  className="w-full text-sm border border-border rounded-md px-3 py-2"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">State</label>
+                <input
+                  type="text"
+                  value={newState}
+                  onChange={(e) => setNewState(e.target.value)}
+                  className="w-full text-sm border border-border rounded-md px-3 py-2"
+                />
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={handleAddBusiness} disabled={!newName.trim()}>
+                Add Business
+              </Button>
+              <Button variant="ghost" onClick={() => setShowAddModal(false)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

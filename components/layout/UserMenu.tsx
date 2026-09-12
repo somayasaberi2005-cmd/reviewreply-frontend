@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { useUserContext } from "@/lib/user-context";
@@ -30,9 +30,18 @@ const agencyLinks = [
 export function UserMenu() {
   const { user, setRole } = useUserContext();
   const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <div className="relative">
+    <div className="relative" ref={menuRef}>
       <button onClick={() => setOpen((prev) => !prev)} className="flex items-center gap-2">
         <div className="w-8 h-8 rounded-full bg-berry-100 text-berry-800 flex items-center justify-center text-sm font-medium">
           {user.name[0]}
@@ -89,3 +98,4 @@ export function UserMenu() {
     </div>
   );
 }
+

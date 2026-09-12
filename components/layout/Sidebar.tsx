@@ -15,11 +15,11 @@ import {
   Users2,
   Send,
   Plug,
+  MapPin,
+  TrendingUp,
   Upload,
   LayoutGrid,
   ShieldCheck,
-  MapPin,
-  TrendingUp,
 } from "lucide-react";
 import { useBusinessContext } from "@/lib/business-context";
 import { getPendingCountsByBusiness } from "@/lib/api";
@@ -69,17 +69,38 @@ const navGroups = [
           { name: "Competitor Report", href: "/reports/competitor" },
         ],
       },
-      { name: "Publish", href: "/publish", icon: Upload,
-  LayoutGrid,
-  ShieldCheck,
-  MapPin,
-  TrendingUp, children: [{ name: "Review Widget", href: "/publish/review-widget" }] },
-      { name: "Settings", href: "/settings", icon: Settings, children: [{ name: "AI Reply Prompts", href: "/settings/ai-reply-prompts" }, { name: "Auto-Tagging", href: "/settings/auto-tagging" }, { name: "Auto-Replies", href: "/settings/auto-replies" }, { name: "Notifications", href: "/settings/notifications" }, { name: "Brand & Colors", href: "/settings/brand-colors" }, { name: "Online Review Links", href: "/settings/online-review-links" }, { name: "Feedback Settings", href: "/settings/feedback-settings" }, { name: "Business Details", href: "/settings/business-details" }] },
+      {
+        name: "Publish",
+        href: "/publish",
+        icon: Upload,
+        children: [
+          { name: "Review Widget", href: "/publish/review-widget" },
+          { name: "Tag Widget", href: "/publish/tag-widget" },
+          { name: "Review Badge", href: "/publish/review-badge" },
+          { name: "Social Sharing", href: "/publish/social-sharing" },
+          { name: "Conversion Pop-Up", href: "/publish/conversion-popup" },
+        ],
+      },
+      {
+        name: "Settings",
+        href: "/settings",
+        icon: Settings,
+        children: [
+          { name: "AI Reply Prompts", href: "/settings/ai-reply-prompts" },
+          { name: "Auto-Tagging", href: "/settings/auto-tagging" },
+          { name: "Auto-Replies", href: "/settings/auto-replies" },
+          { name: "Notifications", href: "/settings/notifications" },
+          { name: "Brand & Colors", href: "/settings/brand-colors" },
+          { name: "Online Review Links", href: "/settings/online-review-links" },
+          { name: "Feedback Settings", href: "/settings/feedback-settings" },
+          { name: "Business Details", href: "/settings/business-details" },
+        ],
+      },
       { name: "Audit Log", href: "/audit-log", icon: FileClock },
-      { name: "Listings Hub", href: "/listings-hub", icon: LayoutGrid },
-      { name: "Review Defense", href: "/review-defense", icon: ShieldCheck },
       { name: "Team", href: "/team", icon: Users },
       { name: "Competitors", href: "/competitors", icon: Users2 },
+      { name: "Listings Hub", href: "/listings-hub", icon: LayoutGrid },
+      { name: "Review Defense", href: "/review-defense", icon: ShieldCheck },
     ],
   },
 ];
@@ -93,10 +114,22 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { businesses, selectedBusinessId, setSelectedBusinessId, loading } = useBusinessContext();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [pendingCounts, setPendingCounts] = useState<Record<string, number>>({});
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     getPendingCountsByBusiness().then(setPendingCounts);
   }, []);
+
+  // Auto-expand whichever group contains the current page, the first time we land on it.
+  useEffect(() => {
+    for (const group of navGroups) {
+      for (const item of group.items) {
+        if ("children" in item && item.children && pathname.startsWith(item.href)) {
+          setOpenGroups((prev) => (prev[item.href] === undefined ? { ...prev, [item.href]: true } : prev));
+        }
+      }
+    }
+  }, [pathname]);
 
   const selectedBusiness = businesses.find((b) => b.id === selectedBusinessId);
   const selectedPending = selectedBusiness ? pendingCounts[selectedBusiness.id] ?? 0 : 0;
@@ -136,22 +169,27 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                   );
                 }
 
+                const isOpen = !!openGroups[item.href];
+
                 return (
                   <div key={item.href}>
-                    <Link
-                      href={item.children![0].href}
-                      onClick={onNavigate}
-                      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors border-l-2 ${
+                    <button
+                      onClick={() => setOpenGroups((prev) => ({ ...prev, [item.href]: !isOpen }))}
+                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors border-l-2 ${
                         isParentActive
                           ? "bg-berry-50 text-berry-800 border-berry-600"
                           : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 border-transparent"
                       }`}
                     >
                       <Icon size={18} className={isParentActive ? "text-berry-600" : "text-slate-400"} />
-                      {item.name}
-                    </Link>
+                      <span className="flex-1 text-left">{item.name}</span>
+                      <ChevronDown
+                        size={14}
+                        className={`text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                      />
+                    </button>
 
-                    {isParentActive && (
+                    {isOpen && (
                       <div className="ml-[1.875rem] mt-1 space-y-0.5 border-l border-border pl-3">
                         {item.children!.map((child) => {
                           const isChildActive = pathname === child.href;
@@ -244,26 +282,3 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     </aside>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

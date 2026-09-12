@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown, HelpCircle } from "lucide-react";
 
@@ -12,9 +12,18 @@ const helpLinks = [
 
 export function HelpMenu() {
   const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <div className="relative">
+    <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen((prev) => !prev)}
         className="flex items-center gap-1 text-sm text-slate-600 hover:text-slate-900"
@@ -41,3 +50,4 @@ export function HelpMenu() {
     </div>
   );
 }
+
