@@ -572,3 +572,22 @@ export type Addon = {
   price: string;
   active: boolean;
 };
+
+export type FeedbackProcessStage = {
+  label: string;
+  count: number;
+  percentOfPrevious: number;
+};
+
+export type EntryPoint = {
+  label: string;
+  count: number;
+};
+
+export type NpsReportExtras = {
+  yourRating: number;
+  yourTotalReviews: number;
+  industryAverageRating: number;
+  feedbackProcess: FeedbackProcessStage[];
+  entryPoints: EntryPoint[];
+};

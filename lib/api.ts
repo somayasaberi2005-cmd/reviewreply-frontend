@@ -1,4 +1,4 @@
-﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink, SendMethod, RatingType, RatingOrder, FeedbackSettings, VerificationStatus, TollFreeDetails, BusinessDetailsInfo, BusinessOwnerDetails, ListingSyncStatus, ListingsHubSummary, ReviewDefenseSummary, BusinessTrend, AgencyBusinessRow, LocationDashboardSummary, ActivityType, CustomerActivityEntry, DefaultConfiguration, ImportBusinessSummary, AgencyUserStatus, AgencyUser, MyProfile, AuthProvider, AuthorizationEntry, ApiCredential, PaymentInfo, AiSettings, AddonId, Addon } from "./types";
+﻿import { Review, DashboardStats, Business, ReportSummary, ReplyStatus, Customer, NewCustomerInput, ImportSummary, RequestFlowSettings, RequestFlowStep, RequestFlowStepId, SmsSettings, KioskSettings, KioskTemplateStep, TextBackSettings, EmailSignatureSurveySettings, UserRole, Integration, IntegrationId, SmartInsight, PerformanceSummary, ReviewsReportSummary, ReviewReportDetail, NpsReportSummary, NpsDataPoint, SuccessReportSummary, BusinessReportRow, QaEntry, QaStatus, CompetitorReportStatus, WidgetLayout, ReviewWidgetSettings, TagWidget, BadgeLayout, LinkTarget, ReviewBadgeSettings, SocialPlatform, SocialAccountStatus, SocialSharingSettings, UrlMatchType, PopupPosition, ConversionPopupSettings, AiReplyPrompts, AutoTag, AutoReplyReviewType, AutoReplyGenerationMethod, AutoReplySettings, NotificationChannel, NotificationRule, NotificationSettings, BrandSettings, ReviewSiteId, ReviewSiteLink, SendMethod, RatingType, RatingOrder, FeedbackSettings, VerificationStatus, TollFreeDetails, BusinessDetailsInfo, BusinessOwnerDetails, ListingSyncStatus, ListingsHubSummary, ReviewDefenseSummary, BusinessTrend, AgencyBusinessRow, LocationDashboardSummary, ActivityType, CustomerActivityEntry, DefaultConfiguration, ImportBusinessSummary, AgencyUserStatus, AgencyUser, MyProfile, AuthProvider, AuthorizationEntry, ApiCredential, PaymentInfo, AiSettings, AddonId, Addon, FeedbackProcessStage, EntryPoint, NpsReportExtras } from "./types";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -1535,4 +1535,25 @@ export async function toggleAddon(id: AddonId): Promise<void> {
   await delay(500);
   const addon = mockAddons.find((a) => a.id === id);
   if (addon) addon.active = !addon.active;
+}
+
+export async function getNpsReportExtras(businessId: string): Promise<NpsReportExtras> {
+  await delay(400);
+  return {
+    yourRating: 4.6,
+    yourTotalReviews: 18,
+    industryAverageRating: 4.2,
+    feedbackProcess: [
+      { label: "Requests Sent", count: 128, percentOfPrevious: 100 },
+      { label: "Request Open", count: 79, percentOfPrevious: 61.7 },
+      { label: "Feedback Received", count: 42, percentOfPrevious: 53.2 },
+      { label: "Clicks to Review Sites", count: 23, percentOfPrevious: 54.8 },
+    ],
+    entryPoints: [
+      { label: "Feedback URL Clicks", count: 14 },
+      { label: "Kiosk Mode", count: 6 },
+      { label: "Store Locator", count: 2 },
+      { label: "Campaign Clicks", count: 9 },
+    ],
+  };
 }

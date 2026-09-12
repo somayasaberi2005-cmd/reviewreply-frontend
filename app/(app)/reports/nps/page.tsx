@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { getNpsReport } from "@/lib/api";
+import { getNpsReport, getNpsReportExtras } from "@/lib/api";
 import { useBusinessContext } from "@/lib/business-context";
-import { NpsReportSummary } from "@/lib/types";
+import { NpsReportSummary, NpsReportExtras } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SavePdfButton } from "@/components/reports/SavePdfButton";
 
@@ -52,13 +52,15 @@ function NpsGauge({ score }: { score: number }) {
 export default function NpsReportPage() {
   const { selectedBusinessId } = useBusinessContext();
   const [data, setData] = useState<NpsReportSummary | null>(null);
+  const [extras, setExtras] = useState<NpsReportExtras | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!selectedBusinessId) return;
     setLoading(true);
-    getNpsReport(selectedBusinessId).then((result) => {
+    Promise.all([getNpsReport(selectedBusinessId), getNpsReportExtras(selectedBusinessId)]).then(([result, extraData]) => {
       setData(result);
+      setExtras(extraData);
       setLoading(false);
     });
   }, [selectedBusinessId]);
@@ -149,9 +151,58 @@ export default function NpsReportPage() {
               </LineChart>
             </ResponsiveContainer>
           </div>
+        
+          {extras && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+              <div className="card">
+                <p className="font-semibold text-slate-900 mb-1">Reviews</p>
+                <p className="text-xs text-slate-500 mb-4">View your progress on 3rd-party review sites.</p>
+                <div className="flex items-center justify-between text-sm mb-4">
+                  <span className="text-slate-700">Google</span>
+                  <span className="font-bold text-slate-900">{extras.yourRating.toFixed(1)}</span>
+                  <span className="text-xs text-slate-400">Total: {extras.yourTotalReviews}</span>
+                </div>
+                <p className="text-xs text-slate-500 mb-1">Industry Averages</p>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-slate-700">Google (Average)</span>
+                  <span className="font-medium text-slate-600">{extras.industryAverageRating.toFixed(1)}</span>
+                </div>
+              </div>
+
+              <div className="card">
+                <p className="font-semibold text-slate-900 mb-1">Feedback Process</p>
+                <p className="text-xs text-slate-500 mb-4">View your data in the feedback process stages.</p>
+                <div className="space-y-3">
+                  {extras.feedbackProcess.map((stage) => (
+                    <div key={stage.label} className="flex items-center justify-between text-sm">
+                      <span className="text-slate-600">{stage.label}</span>
+                      <span className="font-medium text-slate-900">{stage.count}</span>
+                      <span className="text-xs text-slate-400">{stage.percentOfPrevious}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {extras && (
+            <div className="card mt-4">
+              <p className="font-semibold text-slate-900 mb-1">Additional Entry Points</p>
+              <p className="text-xs text-slate-500 mb-4">How customers enter the feedback process outside of email requests.</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {extras.entryPoints.map((point) => (
+                  <div key={point.label} className="text-center">
+                    <p className="text-2xl font-bold text-slate-900">{point.count}</p>
+                    <p className="text-xs text-slate-500">{point.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>
   );
 }
+
 
