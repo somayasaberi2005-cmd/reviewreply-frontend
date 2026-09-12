@@ -31,6 +31,7 @@ export default function RequestSetupPage() {
   const [steps, setSteps] = useState<RequestFlowStep[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [previewRating, setPreviewRating] = useState<number | null>(null);
 
   useEffect(() => {
     if (!selectedBusinessId) return;
@@ -174,12 +175,15 @@ export default function RequestSetupPage() {
                   </p>
                   <div className="flex flex-wrap justify-center gap-1.5 mb-2">
                     {Array.from({ length: 11 }, (_, i) => i).map((n) => (
-                      <span
+                      <button
                         key={n}
-                        className="w-7 h-7 rounded-full bg-slate-800 text-white text-xs flex items-center justify-center"
+                        onClick={() => setPreviewRating(n)}
+                        className={`w-7 h-7 rounded-full text-xs flex items-center justify-center transition-colors ${
+                          previewRating === n ? "bg-berry-600 text-white" : "bg-slate-800 text-white hover:bg-slate-700"
+                        }`}
                       >
                         {n}
-                      </span>
+                      </button>
                     ))}
                   </div>
                   <div className="flex justify-between text-[10px] text-slate-400 mb-5 px-1">

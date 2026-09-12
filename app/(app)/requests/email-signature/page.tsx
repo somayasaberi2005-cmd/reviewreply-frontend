@@ -19,6 +19,7 @@ export default function EmailSignatureSurveyPage() {
   const [saving, setSaving] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [previewRating, setPreviewRating] = useState<number | null>(null);
 
   useEffect(() => {
     if (!selectedBusinessId) return;
@@ -179,12 +180,15 @@ export default function EmailSignatureSurveyPage() {
                 <p className="text-sm font-semibold text-slate-900 mb-2">{settings.promptText}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {scale.map((n) => (
-                    <span
+                    <button
                       key={n}
-                      className="w-7 h-7 rounded-full bg-slate-800 text-white text-xs flex items-center justify-center"
+                      onClick={() => setPreviewRating(n)}
+                      className={`w-7 h-7 rounded-full text-xs flex items-center justify-center transition-colors ${
+                        previewRating === n ? "bg-berry-600 text-white" : "bg-slate-800 text-white hover:bg-slate-700"
+                      }`}
                     >
                       {n}
-                    </span>
+                    </button>
                   ))}
                 </div>
                 <p className="text-xs text-berry-600 mt-2">Click to rate your experience</p>
