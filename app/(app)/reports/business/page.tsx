@@ -4,9 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { getBusinessReport } from "@/lib/api";
 import { BusinessReportRow } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { SavePdfButton } from "@/components/reports/SavePdfButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Download, ArrowUpDown } from "lucide-react";
+import { SavePdfButton } from "@/components/reports/SavePdfButton";
 
 type SortKey = keyof BusinessReportRow;
 
@@ -48,7 +48,7 @@ export default function BusinessReportPage() {
     });
   }, [rows, search, sortKey, sortAsc]);
 
-  function downloadCsv() {
+  function exportCsv() {
     const header =
       "Business Name,Location ID,Rating,Requests Sent,Opens,Open Rate,Feedback Received,Feedback Rate,Response Rate,Review Clicks,New Reviews,Total Reviews\n";
     const csvRows = filteredSorted
@@ -100,10 +100,12 @@ export default function BusinessReportPage() {
               onChange={(e) => setSearch(e.target.value)}
               className="text-sm border border-border rounded-md px-3 py-1.5 sm:max-w-xs"
             />
-            <SavePdfButton />
-            <Button variant="outline" size="sm" onClick={downloadCsv}>
-              <Download size={14} /> Email CSV
-            </Button>
+            <div className="flex gap-2">
+              <SavePdfButton />
+              <Button variant="outline" size="sm" onClick={exportCsv}>
+                <Download size={14} /> Email CSV
+              </Button>
+            </div>
           </div>
 
           <div className="overflow-x-auto">
@@ -148,4 +150,3 @@ export default function BusinessReportPage() {
     </div>
   );
 }
-

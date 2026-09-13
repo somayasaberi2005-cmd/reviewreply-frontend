@@ -90,7 +90,7 @@ export default function AutoRepliesPage() {
             }`}
           >
             <span
-              className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
+              className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${
                 settings.enabled ? "translate-x-4" : "translate-x-0.5"
               }`}
             />
@@ -193,3 +193,4 @@ export default function AutoRepliesPage() {
     </div>
   );
 }
+

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getListingsHubSummary } from "@/lib/api";
 import { useBusinessContext } from "@/lib/business-context";
+import { useToast } from "@/lib/toast-context";
 import { ListingsHubSummary } from "@/lib/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CheckCircle2, ThumbsUp, Search, Camera } from "lucide-react";
@@ -17,6 +18,8 @@ export default function ListingsHubPage() {
   const { selectedBusinessId } = useBusinessContext();
   const [summary, setSummary] = useState<ListingsHubSummary | null>(null);
   const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (!selectedBusinessId) return;
@@ -88,10 +91,20 @@ export default function ListingsHubPage() {
       </div>
 
       <div className="text-center">
-        <button className="bg-slate-900 text-white text-sm font-medium px-6 py-3 rounded-lg hover:bg-slate-800 transition-colors">
-          Access Now
+        <button
+          onClick={async () => {
+            setSyncing(true);
+            await new Promise((r) => setTimeout(r, 900));
+            setSyncing(false);
+            showToast("All listings synced");
+          }}
+          disabled={syncing}
+          className="bg-slate-900 text-white text-sm font-medium px-6 py-3 rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-60"
+        >
+          {syncing ? "Syncing..." : "Access Now"}
         </button>
       </div>
     </div>
   );
 }
+

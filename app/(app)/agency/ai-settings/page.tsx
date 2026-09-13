@@ -13,7 +13,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: () => void 
       onClick={onChange}
       className={`flex-shrink-0 w-9 h-5 rounded-full transition-colors relative ${checked ? "bg-berry-600" : "bg-slate-200"}`}
     >
-      <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${checked ? "translate-x-4" : "translate-x-0.5"}`} />
+      <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${checked ? "translate-x-4" : "translate-x-0.5"}`} />
     </button>
   );
 }
@@ -106,3 +106,4 @@ export default function AiSettingsPage() {
     </div>
   );
 }
+
